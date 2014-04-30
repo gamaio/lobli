@@ -19,7 +19,7 @@ Core code will be based off of Short version 4-2.9 and versions will be determin
         - Number of commits since last developing version
 
 This project will consist of three branches:
-    - unstable
+    - unstable (dev)
     - beta
     - stable (master)
 
