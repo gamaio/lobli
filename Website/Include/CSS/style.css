@@ -1,0 +1,116 @@
+body{
+  /*background: #2f4f5b;*/
+  background: #e0a518;
+  font-family: "Verdana";
+  min-width:100%;
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  min-width: 992px;
+}
+
+h4 {
+  margin-top: 25px;
+}
+
+.row {
+  margin-bottom: 20px;
+}
+
+.row .row {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+hr {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+  background: rgba(34, 32, 27, .38);
+  border: none;
+}
+
+.active{
+  background: rgba(34, 32, 27, .46);
+}
+
+.navbar li a{
+  font-size: 40px;
+  color: #eeeeee;
+}
+
+.navbar a:hover{
+  background: #000;
+  color: #248;
+  webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 15px rgba(94, 125, 142, 0.9) !important;
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 15px rgba(94, 125, 142, 0.9) !important;
+         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 15px rgba(94, 125, 142, 0.9) !important;
+}
+
+.navbar a:active{
+  background: rgba(0,0,0,.5);
+}
+
+.header h3{
+  font-family: "Verdana Bold Italc";
+  font-size: 60px;
+  font-weight: 700;
+  margin-left: 24%;
+}
+
+.spacer{
+  margin-bottom: 8%;
+}
+
+.form-shorten input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  height: 400%;
+  font-size: 20px;
+  border: none;
+  box-shadow: none;
+}
+
+.form-shorten input[type="text"]:focus{
+  border: none;
+  box-shadow: none;
+  padding: 10px;
+  font-size: 16px;
+  height: 400%;
+  font-size: 20px;
+}
+
+.submitbtn{
+  width:840%;
+  height: 46px;
+  background: #333;
+  border: none;
+}
+
+#footer{
+  font-size: 14px;
+}
+
+.text-muted{
+   color: #2f4f5b;
+}
+
+#message{
+  width:100%;
+  font-size: 15px;
+  font-weight: 550;
+  margin-left: 3.5%;
+}
+
+#newlink{
+  color: rgba(0, 191, 0, .6);
+}
+
+#newlink:hover{
+  color: rgba(0, 191, 0, 1);
+}
