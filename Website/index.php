@@ -1,3 +1,55 @@
+<?php
+
+  // exit codes:
+  /*
+    exit 0 - Good script
+    exit 5 - Link redirection
+
+    10x exit codes    
+      exit 11 - Shortener Stats redirection
+      exit 12 - Shortener Resolver redirection
+      exit 13 - Shortener About redirection
+  * /
+
+  $shortdb = new mysqli('localhost', 'short', 'c9wx2aLL2PYqzWBM', 'short'); // Connect to link shortener DB
+  if($shortdb->connect_errno > 0) die('Unable to connect to database [' . $shortdb->connect_error . '] - Check dbsettings.php');
+
+  // This has been depreciated. Still here for backwards compatibility with existing links
+  if(!empty($_GET['l'])){
+    $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($_GET['l']))));
+    $link = str_replace('/', '', $link);
+    $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
+    if($result = $shortdb->query($sql)){
+      if($row = $result->fetch_assoc()){
+        $link = $row['link'];
+        header("location:$link");
+        exit(5); // Stop script execution to save on resources
+      }
+    }
+  }
+
+  // New way to check for valid short links, two characters shorter than the if statement above
+  if(!empty($_GET)){
+    $key = key($_GET);
+
+    if($key == "stats"){ header("location:http://lob.li/stats.php"); exit(11); }
+    if($key == "resolv"){ header("location:http://lob.li/resolve.php"); exit(12); }
+    if($key == "about"){ header("location:http://lob.li/about.php"); exit(13); }
+    
+    $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($key))));
+    $link = str_replace('/', '', $link);
+    $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
+    if($result = $shortdb->query($sql)){
+      if($row = $result->fetch_assoc()){
+        $link = $row['link'];
+        header("location:$link");
+        exit(5); // Stop script execution to save on resources
+      }
+    }
+  }
+
+ */
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,55 +70,25 @@
     <![endif]-->
   </head>
   <body>
-    <div class="container">
+    <div class="container center-block">
 
-      <div class="header center-block">
-        <h3>lob.li - Objective Links</h3>
-      </div>
-
-      <!-- Static navbar -->
-      <div class="navbar" role="navigation">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-          </div>
-          <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li><a class="active" href="#">Home</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Stats</a></li>
-              <li><a href="#">Resolver</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">fb</a></li>
-              <li><a href="#">tw</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
-      </div>
-
-      <br class="spacer" />
+      <?php include('Include/HTML/navbar.htm') ?>
 
       <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-          <form class="form-shorten form-inline" role="form">
+          <h2 class="form-shorten-heading">Please give me a link to shorten...</h2>
+          <form class="form-shorten form-inline" id="form-shorten" role="form">
             <div class="input-group">
-              <input type="text" class="form-control input-lg"  placeholder="http://" required autofocus>
+              <input type="text" class="form-control input-lg" id="link" placeholder="http://" required autofocus>
               <span class="input-group-btn">
-                <button type="button" class="btn btn-success btn-lg btn-block submitbtn">
-                  <span class="glyphicon glyphicon-arrow-right"></span>
+                <button type="button" class="btn btn-primary btn-lg btn-block submitbtn">
+                  <span class="glyphicon glyphicon-share-alt icon-rotate"></span>
                 </button>
               </span>
             </div><!-- /input-group -->
           </form>
           
-
           <?php if(isset($_GET['errmsg'])){ ?>
 
           <div class="alert alert-danger" id="message">
@@ -103,5 +125,38 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="include/Bootstrap/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" language="JavaScript">
+      jQuery(document).ready(function(){
+        $('#link').focus();
+        //$('#message').addClass('hide');
+        $('#homelink').addClass('active');
+      });
+
+      function copyToClipboard(text){
+        window.prompt ("Copy to clipboard: Ctrl+C, Enter (when closed I will open your link in a new tab)", text);
+      }
+    </script>
+    <script type="text/javascript" language="JavaScript">
+      // This is our AJAX - Thank you Wizzy <3
+      $("#form-shorten").submit(function(event){
+        $("#theLoader").fadeIn("fast");
+        event.preventDefault();
+        event.stopPropagation();
+        $.post("process.php?token=<?php echo $token; ?>", $(this).serialize(), function(data){
+          $("#message").hide().slideDown("fast");
+          $("#theLoader").hide();
+          if($('#error').length){
+            $('#short-button').removeClass('btn-primary');
+            $('#short-button').removeClass('btn-success');
+            $('#short-button').addClass('btn-danger');
+          }else if($('#success').length){
+            $('#short-button').removeClass('btn-primary');
+            $('#short-button').removeClass('btn-danger');
+            $('#short-button').addClass('btn-success');
+          }
+        });
+      });
+    </script>
   </body>
 </html>
