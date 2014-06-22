@@ -26,7 +26,9 @@
         <div class="col-md-3"></div>
         <div class="col-md-6">
           <h2 class="form-shorten-heading">Lob.li Web Programming Interface</h2>
-
+          <div class="text-success bg-success alert">
+            
+          </div>
         </div>
         <div class="col-md-3"></div>
       </div>
