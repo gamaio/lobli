@@ -52,7 +52,7 @@
             </span></a>
               
             <a href="#" id="copylink" title="Copy Link">
-              <span class="glyphicon glyphicon-link" style="float:right;padding-right:2%;"></span>
+              <span class="glyphicon glyphicon-link" style="float:right;padding-right:1%;"></span>
             </a>
           </div>
 
@@ -63,7 +63,7 @@
             <span class="longlink2">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
             </span></a> is not a lob.li link.<br> However we found that it has been shortened. <a href="#" title="HTML Title of website being shortened">lob.li/123</a>
             <a href="#" id="copylink" title="Copy Link">
-              <span class="glyphicon glyphicon-link" style="float:right;padding-right:2%;"></span>
+              <span class="glyphicon glyphicon-link" style="float:right;padding-right:1%;"></span>
             </a>
           </div>
 
