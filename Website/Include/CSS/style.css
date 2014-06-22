@@ -48,7 +48,6 @@ hr {
 
 .navbar a:hover{
   background: rgba(34, 32, 27, 1);
-  text
 }
 
 .header h3{
@@ -83,7 +82,7 @@ hr {
 
 .submitbtn{
   width:30px;
-  height: 46px;
+  height: 47px;
   background: #333;
   border: none;
 }
@@ -153,4 +152,14 @@ hr {
 .linktext{
   position: relative;
   font-size: 76%;
+}
+
+.table{
+  color: rgb(34, 139, 34);
+}
+
+.centertab{
+  margin-left: auto; 
+  margin-right: auto;
+  text-align: center;
 }
