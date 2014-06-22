@@ -26,15 +26,29 @@
         <div class="col-md-3"></div>
         <div class="col-md-6">
           <h2 class="form-shorten-heading">About Lob.li</h2>
+          <div class="text-success bg-success alert">
+            Lob.li is a link shortener. That's the easiest way to describe what this service does and is about.
+            Hi, I'm c0de. I developed this website with many hours of work and lots of distractions. 
+            This site is very JavaScript and CSS heavy and unfortunatly breaks on text-only browsers and browsers with JavaScript disabled.
 
+            <h3>A little background on this site...</h3>
+              The domain lob.li was pretty much an attempt to make a pronounceable and memorable domain
+              A lot of the backend code is from my older link shortener, <a href="http://unps.us">UnPS</a>.
+              The base code has gone through many iterations, but only versions 2 through 4-2 are supported.
+
+            <h3>Terms of Service...</h3>
+            <ul>
+              <li>No already shortened links (bit.li, ad.fly, etc)</li>
+              <li>No Illegal actions, or websites promoting illegal actions</li>
+              <li>No Spam. Nobody likes it, don't use my service to distribute spam</li>
+              <li>No Linking to viruses and other malware</li>
+              <li>Anything that I feel would cause harm to this service</li>
+            </ul>
+            NOTE: I clean up the database from time to time and manually inspect links for anything that violates these rules.
+            They will be removed without notice.
+          </div>
         </div>
         <div class="col-md-3"></div>
-      </div>
-    </div>
-
-    <div id="footer" style="position:absolute;width:100%;bottom:1px;">
-      <div class="container">
-        <p class="text-muted">Copyright &copy; 2014 Unified Programming Solutions - Version: 0.0.1</p>
       </div>
     </div>
 
