@@ -26,7 +26,54 @@
         <div class="col-md-3"></div>
         <div class="col-md-6">
           <h2 class="form-shorten-heading">Lob.li Link Statistics</h2>
-
+          <table class="table table-condensed">
+            <thead>
+              <tr class="success">
+                <th></th>
+                <th>LinkID</th>
+                <th>Resolved Link</th>
+                <th>Total Clicks</th>
+                <th>Date Added</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="success">
+                <td></td>
+                <td class="centertab"><a href="#">1</a></td>
+                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                <td class="centertab">44444</td>
+                <td>00/00/0000</td>
+              </tr>
+              <tr class="success">
+                <td></td>
+                <td class="centertab"><a href="#">6</a></td>
+                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                <td class="centertab">44444</td>
+                <td>00/00/0000</td>
+              </tr>
+              <tr class="success">
+                <td></td>
+                <td class="centertab"><a href="#">236</a></td>
+                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                <td class="centertab">44444</td>
+                <td>00/00/0000</td>
+              </tr>
+              <tr class="success">
+                <td></td>
+                <td class="centertab"><a href="#">f42</a></td>
+                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                <td class="centertab">44444</td>
+                <td>00/00/0000</td>
+              </tr>
+              <tr class="success">
+                <td></td>
+                <td class="centertab"><a href="#">tg54<a></td>
+                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                <td class="centertab">44444</td>
+                <td>00/00/0000</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="col-md-3"></div>
       </div>
@@ -46,6 +93,15 @@
     <script type="text/javascript" language="JavaScript">
       jQuery(document).ready(function(){
         $('#statlink').addClass('active');
+      });
+
+      $(function(){
+        $(".res").each(function(i){
+          len=$(this).text().length;
+          if(len > 35){
+            $(this).text($(this).text().substr(0, 35) + '...');
+          }
+        });       
       });
     </script>
   </body>
