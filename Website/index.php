@@ -1,4 +1,15 @@
 <?php
+  session_start();
+
+  // Generate a token on the fly. This should prevent POST spam attacks directly into process.php
+  $token = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
+  $token = base_convert($token, 10, 36); 
+  $_SESSION['token'] = $token;
+
+  $catchid = substr(number_format(time() * mt_rand(),0,'',''),0,10);
+  $catchVal = hash('sha256', $catchid.mt_rand().time().substr(number_format(time() * mt_rand(),0,'',''),0,10));
+  $catchVal = base_convert($catchVal.$catchid, 10, 36);
+  $_SESSION['catch'] = $catchid.":".$catchVal;
 
   // exit codes:
   /*
@@ -9,9 +20,9 @@
       exit 11 - Shortener Stats redirection
       exit 12 - Shortener Resolver redirection
       exit 13 - Shortener About redirection
-  * /
+  */
 
-  $shortdb = new mysqli('localhost', 'short', 'c9wx2aLL2PYqzWBM', 'short'); // Connect to link shortener DB
+  $shortdb = new mysqli('localhost', 'short', 'password', 'short'); // Connect to link shortener DB
   if($shortdb->connect_errno > 0) die('Unable to connect to database [' . $shortdb->connect_error . '] - Check dbsettings.php');
 
   // This has been depreciated. Still here for backwards compatibility with existing links
@@ -32,9 +43,9 @@
   if(!empty($_GET)){
     $key = key($_GET);
 
-    if($key == "stats"){ header("location:http://lob.li/stats.php"); exit(11); }
-    if($key == "resolv"){ header("location:http://lob.li/resolve.php"); exit(12); }
-    if($key == "about"){ header("location:http://lob.li/about.php"); exit(13); }
+    if($key == "stats"){ header("location:http://s.lob.li"); exit(11); }
+    if($key == "resolv"){ header("location:http://r.lob.li"); exit(12); }
+    if($key == "about"){ header("location:http://a.lob.li"); exit(13); }
     
     $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($key))));
     $link = str_replace('/', '', $link);
@@ -47,8 +58,6 @@
       }
     }
   }
-
- */
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,11 +109,11 @@
           <div class="alert alert-success" id="message">
             Your link: <a href="#" title="HTML Title of website being shortened">lob.li/12345</a>
               
-            <a href="#" id="newlink" title="New Link">
+            <!--<a href="#" id="newlink" title="New Link"> This would require changing how I generate links, and I don't feel like doing it right now - 6/22/12 1:21am EST
               <span class="glyphicon glyphicon-refresh" style="float:right;"></span>
-            </a>
+            </a>-->
             <a href="#" id="copylink" title="Copy Link">
-              <span class="glyphicon glyphicon-link" style="float:right;padding-right:2%;"></span>
+              <span class="glyphicon glyphicon-link" style="float:right;padding-right:1%;"></span>
             </a>
           </div>
 
