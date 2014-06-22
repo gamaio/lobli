@@ -47,11 +47,10 @@
           <?php } if(isset($_GET['gomsg'])){ ?> 
 
           <div class="alert alert-success" id="message">
-            Your link: <a href="#" title="HTML Title of website being shortened">http://somelonglink.com/12/2431/da/21es...</a>
+            Your link: <a href="#" title="HTML Title of website being resolved">
+            <span class="longlink">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+            </span></a>
               
-            <a href="#" id="newlink" title="New Link">
-              <span class="glyphicon glyphicon-refresh" style="float:right;"></span>
-            </a>
             <a href="#" id="copylink" title="Copy Link">
               <span class="glyphicon glyphicon-link" style="float:right;padding-right:2%;"></span>
             </a>
@@ -60,10 +59,20 @@
           <?php } if(isset($_GET['warnmsg'])){ ?>
 
           <div class="alert alert-warning" id="message">
-            Your link: <a href="#" title="HTML Title of website being shortened">longlink</a> is not a lob.li link.<br> However we found that it has been shortened. <a href="#" title="HTML Title of website being shortened">lob.li/123</a>
+            Your link: <a href="#" title="HTML Title of website being resolved">
+            <span class="longlink2">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+            </span></a> is not a lob.li link.<br> However we found that it has been shortened. <a href="#" title="HTML Title of website being shortened">lob.li/123</a>
             <a href="#" id="copylink" title="Copy Link">
               <span class="glyphicon glyphicon-link" style="float:right;padding-right:2%;"></span>
             </a>
+          </div>
+
+          <?php } if(isset($_GET['warnmsg2'])){ ?>
+
+          <div class="alert alert-warning" id="message">
+            Your link: <a href="#" title="HTML Title of website being resolved">
+            <span class="longlink">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+            </span></a> is not a lob.li link and has not been shortened.
           </div>
 
           <?php } ?>
@@ -75,7 +84,7 @@
 
     <div id="footer" style="position:absolute;width:100%;bottom:1px;">
       <div class="container">
-        <p class="text-muted">Copyright &copy; 2014 Unified Programming Solutions - Version: 0.0.1 - <a href="?gomsg">Success link</a> <a href="?errmsg">Error Link</a> <a href="?warnmsg">Warn Link</a></p>
+        <p class="text-muted">Copyright &copy; 2014 Unified Programming Solutions - Version: 0.0.1 - <a href="?gomsg">Success link</a> <a href="?errmsg">Error Link</a> <a href="?warnmsg">Warn Link</a> <a href="?warnmsg2">Warn Link 2</a></p>
       </div>
     </div>
 
@@ -94,6 +103,24 @@
       function copyToClipboard(text){
         window.prompt ("Copy to clipboard: Ctrl+C, Enter (when closed I will open your link in a new tab)", text);
       }
+
+      $(function(){
+        $(".longlink").each(function(i){
+          len=$(this).text().length;
+          if(len > 47){
+            $(this).text($(this).text().substr(0, 47) + '...');
+          }
+        });       
+      });
+
+      $(function(){
+        $(".longlink2").each(function(i){
+          len=$(this).text().length;
+          if(len > 25){
+            $(this).text($(this).text().substr(0, 25) + '...');
+          }
+        });       
+      });
     </script>
     <script type="text/javascript" language="JavaScript">
       // This is our AJAX - Thank you Wizzy <3
