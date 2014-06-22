@@ -112,7 +112,7 @@
             <!--<a href="#" id="newlink" title="New Link"> This would require changing how I generate links, and I don't feel like doing it right now - 6/22/12 1:21am EST
               <span class="glyphicon glyphicon-refresh" style="float:right;"></span>
             </a>-->
-            <a href="#" id="copylink" title="Copy Link">
+            <a href="#" id="copylink" title="Copy Link" onclick="copyToClipboard('http://lob.li/$short');">
               <span class="glyphicon glyphicon-link" style="float:right;padding-right:1%;"></span>
             </a>
           </div>
