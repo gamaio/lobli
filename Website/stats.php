@@ -37,6 +37,19 @@
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td>
+                   <div id="theLoader" style="padding-left:10%;">
+                    <div class="wrap">
+                      <div class="loading">
+                        <span class="title">loading....</span>
+                        <span class="text">Please Wait</span>
+                      </div>
+                    </div>
+                </td>
+              </tr>
               <tr class="success">
                 <td></td>
                 <td class="centertab"><a href="#">1</a></td>

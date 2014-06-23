@@ -37,6 +37,16 @@
               </span>
             </div><!-- /input-group -->
           </form>
+          <div id="message">
+            <div id="theLoader">
+              <div class="wrap">
+                <div class="loading">
+                  <span class="title">loading....</span>
+                  <span class="text">Please Wait</span>
+                </div>
+              </div>
+            </div>
+          </div>
           
           <?php if(isset($_GET['errmsg'])){ ?>
 
