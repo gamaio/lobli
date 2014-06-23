@@ -17,15 +17,18 @@
 
     $messages = array(
         "
-            <div class=\"alert alert-success\" id=\"message\">
+            <div class=\"alert alert-success\" id=\"success\">
                 Your link: <a href=\"http://lob.li/$short\" title=\"HTML Title of website being shortened\" target=\"lobli.$short\">lob.li/$short</a>
                 <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
+                    <!--<a href=\"#\" id=\"newlink\" title=\"New Link\"> This would require changing how I generate links, and I don't feel like doing it right now - 6/22/12 1:21am EST
+                      <span class=\"glyphicon glyphicon-refresh\" style=\"float:right;\"></span>
+                    </a>-->
                     <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
                 </a>
             </div>
         ",
         "
-            <div class=\"alert alert-warning\" id=\"message\">
+            <div class=\"alert alert-warning\" id=\"warning\">
                 Existing link: <a href=\"http://lob.li/$short\" title=\"HTML Title of website being shortened\" target=\"lobli.$short\">lob.li/$short</a>
                  <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
                     <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
@@ -33,17 +36,17 @@
             </div>
         ",
         "
-            <div class=\"alert alert-danger\" id=\"message\">
+            <div class=\"alert alert-danger\" id=\"danger\">
                 ERROR! - Your link: <a href=\"$link\" target=\"$link\">$link</a> didn't resolve to a website. <br />Please check your link and try again.
             </div>
         ", 
         "
-            <div class=\"alert alert-danger\" id=\"message\">
+            <div class=\"alert alert-danger\" id=\"danger\">
                 ERROR! - Well this is embarrassing... This never happens, but I appear to have suffered a database error. <br />Here's what I know: $error
             </div>
         ",
         "
-            <div class=\"alert alert-danger\" id=\"message\">
+            <div class=\"alert alert-danger\" id=\"danger\">
                 ERROR! - The sanitize function seems to have failed. This shouldn't happen, maybe <a href=\"mailto:c0de@unps.us\">c0de</a> forgot a semi-colon somewhere or something. 
             </div>
         "
