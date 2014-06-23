@@ -96,6 +96,13 @@ hr {
 }
 
 #message{
+  float: center;
+  text-align: center;
+}
+
+#message .alert{
+  float: left;
+  text-align: left;
   width:515px;
   font-size: 15px;
   font-weight: 550;
@@ -163,3 +170,93 @@ hr {
   margin-right: auto;
   text-align: center;
 }
+
+#theLoader{ display: none; }
+
+  @-webkit-keyframes title {
+    0% {
+      opacity: 0;
+      right: 130px;
+    }
+    48% {
+      opacity: 0;
+      right: 130px;
+    }
+    52% {
+      opacity: 1;
+      right: 30px;
+    }
+    70% {
+      opacity: 1;
+      right: 30px;
+    }
+    100% {
+      opacity: 0;
+      right: 30px;
+    }
+  }
+  @-moz-keyframes title {
+    0% {
+      opacity: 0;
+      right: 130px;
+    }
+    48% {
+      opacity: 0;
+      right: 130px;
+    }
+    52% {
+      opacity: 1;
+      right: 30px;
+    }
+    70% {
+      opacity: 1;
+      right: 30px;
+    }
+    100% {
+      opacity: 0;
+      right: 30px;
+    }
+  }
+  @-webkit-keyframes fade {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @-moz-keyframes fade {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  .wrap {
+    font-family: sans-serif, arial;
+    color: #eaf7ff;
+    position: relative;
+    left: 45%;
+    margin-left: auto;
+    margin-top: auto;
+  }
+  .loading {
+    position: relative;
+    text-align: center;
+    text-shadow: 0 0 6px #bce4ff;
+    height: 20px;
+    width: 150px;
+  }
+  .loading span {
+    display: block;
+    text-transform: uppercase;
+    position: absolute;
+    right: 30px;
+    height: 20px;
+    width: 200px;
+    line-height: 20px;
+  }
+  .loading span.title {
+    -moz-animation: title 3.4s linear infinite;
+    -webkit-animation: title 3.4s linear infinite;
+    animation: title 3.4s linear infinite;
+  }
+  .loading span.text {
+    -moz-animation: title 3.4s linear 1.7s infinite;
+    -webkit-animation: title 3.4s linear 1.7s infinite;
+    animation: title 3.4s linear 1.7s infinite;
+    opacity: 0;
+  }
