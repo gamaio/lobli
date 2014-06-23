@@ -91,33 +91,23 @@
             <div class="input-group">
               <input type="text" class="form-control input-lg" id="link" placeholder="http://" required autofocus>
               <span class="input-group-btn">
-                <button type="button" class="btn btn-primary btn-lg btn-block submitbtn">
+                <button type="button" class="btn btn-primary btn-lg btn-block submitbtn" id="short-button">
                   <span class="glyphicon glyphicon-share-alt icon-rotate"></span>
                 </button>
               </span>
             </div><!-- /input-group -->
           </form>
-          
-          <?php if(isset($_GET['errmsg'])){ ?>
+          <div id="message">
+            <div id="theLoader">
+              <div class="wrap">
+                <div class="loading">
+                  <span class="title">loading....</span>
+                  <span class="text">Please Wait</span>
+                </div>
+              </div>
 
-          <div class="alert alert-danger" id="message">
-            Oh noes! An error has occured. 
+            </div>
           </div>
-
-          <?php } if(isset($_GET['gomsg'])){ ?> 
-
-          <div class="alert alert-success" id="message">
-            Your link: <a href="#" title="HTML Title of website being shortened">lob.li/12345</a>
-              
-            <!--<a href="#" id="newlink" title="New Link"> This would require changing how I generate links, and I don't feel like doing it right now - 6/22/12 1:21am EST
-              <span class="glyphicon glyphicon-refresh" style="float:right;"></span>
-            </a>-->
-            <a href="#" id="copylink" title="Copy Link" onclick="copyToClipboard('http://lob.li/$short');">
-              <span class="glyphicon glyphicon-link" style="float:right;padding-right:1%;"></span>
-            </a>
-          </div>
-
-          <?php } ?>
 
         </div>
         <div class="col-md-3"></div>
@@ -126,7 +116,7 @@
 
     <div id="footer" style="position:absolute;width:100%;bottom:1px;">
       <div class="container">
-        <p class="text-muted">Copyright &copy; 2014 Unified Programming Solutions - Version: 0.0.1 - <a href="?gomsg">Success link</a> <a href="?errmsg">Error Link</a></p>
+        <p class="text-muted">Copyright &copy; 2014 Unified Programming Solutions - Version: 0.0.1</p>
       </div>
     </div>
 
@@ -138,7 +128,6 @@
     <script type="text/javascript" language="JavaScript">
       jQuery(document).ready(function(){
         $('#link').focus();
-        //$('#message').addClass('hide');
         $('#homelink').addClass('active');
       });
 
@@ -153,16 +142,23 @@
         event.preventDefault();
         event.stopPropagation();
         $.post("process.php?token=<?php echo $token; ?>", $(this).serialize(), function(data){
-          $("#message").hide().slideDown("fast");
+          $("#message").hide().html(data).slideDown("fast");
           $("#theLoader").hide();
-          if($('#error').length){
+          if($('#danger').length){
             $('#short-button').removeClass('btn-primary');
             $('#short-button').removeClass('btn-success');
+            $('#short-button').removeClass('btn-warning');
             $('#short-button').addClass('btn-danger');
           }else if($('#success').length){
             $('#short-button').removeClass('btn-primary');
             $('#short-button').removeClass('btn-danger');
+            $('#short-button').removeClass('btn-warning');
             $('#short-button').addClass('btn-success');
+          }else if($('#warning').length){
+            $('#short-button').removeClass('btn-primary');
+            $('#short-button').removeClass('btn-danger');
+            $('#short-button').removeClass('btn-success');
+            $('#short-button').addClass('btn-warning');
           }
         });
       });
