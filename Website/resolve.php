@@ -30,8 +30,9 @@
             <div class="input-group">
               <span class="input-group-addon">http://lob.li/</span>
               <input type="text" class="form-control input-lg" id="link" placeholder="id" required autofocus>
+              <input type="hidden" name="<?php echo $catchid; ?>" value="<?php echo $catchVal; ?>"/>
               <span class="input-group-btn">
-                <button type="button" class="btn btn-primary btn-lg btn-block submitbtn">
+                <button type="submit" class="btn btn-primary btn-lg submitbtn">
                   <span class="glyphicon glyphicon-share-alt icon-rotate"></span>
                 </button>
               </span>
@@ -47,46 +48,6 @@
               </div>
             </div>
           </div>
-          
-          <?php if(isset($_GET['errmsg'])){ ?>
-
-          <div class="alert alert-danger" id="message">
-            Oh noes! An error has occured. 
-          </div>
-
-          <?php } if(isset($_GET['gomsg'])){ ?> 
-
-          <div class="alert alert-success" id="message">
-            Your link: <a href="#" title="HTML Title of website being resolved">
-            <span class="longlink">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-            </span></a>
-              
-            <a href="#" id="copylink" title="Copy Link">
-              <span class="glyphicon glyphicon-link" style="float:right;padding-right:1%;"></span>
-            </a>
-          </div>
-
-          <?php } if(isset($_GET['warnmsg'])){ ?>
-
-          <div class="alert alert-warning" id="message">
-            Your link: <a href="#" title="HTML Title of website being resolved">
-            <span class="longlink2">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-            </span></a> is not a lob.li link.<br> However we found that it has been shortened. <a href="#" title="HTML Title of website being shortened">lob.li/123</a>
-            <a href="#" id="copylink" title="Copy Link">
-              <span class="glyphicon glyphicon-link" style="float:right;padding-right:1%;"></span>
-            </a>
-          </div>
-
-          <?php } if(isset($_GET['warnmsg2'])){ ?>
-
-          <div class="alert alert-warning" id="message">
-            Your link: <a href="#" title="HTML Title of website being resolved">
-            <span class="longlink">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-            </span></a> is not a lob.li link and has not been shortened.
-          </div>
-
-          <?php } ?>
-
         </div>
         <div class="col-md-3"></div>
       </div>
@@ -94,7 +55,7 @@
 
     <div id="footer" style="position:absolute;width:100%;bottom:1px;">
       <div class="container">
-        <p class="text-muted">Copyright &copy; 2014 Unified Programming Solutions - Version: 0.0.1 - <a href="?gomsg">Success link</a> <a href="?errmsg">Error Link</a> <a href="?warnmsg">Warn Link</a> <a href="?warnmsg2">Warn Link 2</a></p>
+        <p class="text-muted">Copyright &copy; 2014 Unified Programming Solutions - Version: 0.0.1</p>
       </div>
     </div>
 
@@ -141,14 +102,12 @@
         $.post("process.php?token=<?php echo $token; ?>", $(this).serialize(), function(data){
           $("#message").hide().slideDown("fast");
           $("#theLoader").hide();
-          if($('#error').length){
-            $('#short-button').removeClass('btn-primary');
-            $('#short-button').removeClass('btn-success');
-            $('#short-button').addClass('btn-danger');
+          if($('#danger').length){
+            $('#short-button').removeClass("btn-primary btn-success btn-warning").addClass("btn-danger");
           }else if($('#success').length){
-            $('#short-button').removeClass('btn-primary');
-            $('#short-button').removeClass('btn-danger');
-            $('#short-button').addClass('btn-success');
+            $('#short-button').removeClass("btn-primary btn-danger btn-warning").addClass("btn-success");
+          }else if($('#warning').length){
+            $('#short-button').removeClass("btn-primary btn-success btn-danger").addClass("btn-warning");
           }
         });
       });
