@@ -89,9 +89,10 @@
           <h2 class="form-shorten-heading">Please give me a link to shorten...</h2>
           <form class="form-shorten form-inline" id="form-shorten" role="form">
             <div class="input-group">
-              <input type="text" class="form-control input-lg" id="link" placeholder="http://" required autofocus>
+              <input type="text" class="form-control input-lg" id="link" name="link" placeholder="http://" required autofocus>
+              <input type="hidden" name="<?php echo $catchid; ?>" value="<?php echo $catchVal; ?>"/>
               <span class="input-group-btn">
-                <button type="button" class="btn btn-primary btn-lg btn-block submitbtn" id="short-button">
+                <button type="submit" class="btn btn-primary btn-lg submitbtn" id="short-button">
                   <span class="glyphicon glyphicon-share-alt icon-rotate"></span>
                 </button>
               </span>
@@ -105,7 +106,6 @@
                   <span class="text">Please Wait</span>
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -145,20 +145,11 @@
           $("#message").hide().html(data).slideDown("fast");
           $("#theLoader").hide();
           if($('#danger').length){
-            $('#short-button').removeClass('btn-primary');
-            $('#short-button').removeClass('btn-success');
-            $('#short-button').removeClass('btn-warning');
-            $('#short-button').addClass('btn-danger');
+            $('#short-button').removeClass("btn-primary btn-success btn-warning").addClass("btn-danger");
           }else if($('#success').length){
-            $('#short-button').removeClass('btn-primary');
-            $('#short-button').removeClass('btn-danger');
-            $('#short-button').removeClass('btn-warning');
-            $('#short-button').addClass('btn-success');
+            $('#short-button').removeClass("btn-primary btn-danger btn-warning").addClass("btn-success");
           }else if($('#warning').length){
-            $('#short-button').removeClass('btn-primary');
-            $('#short-button').removeClass('btn-danger');
-            $('#short-button').removeClass('btn-success');
-            $('#short-button').addClass('btn-warning');
+            $('#short-button').removeClass("btn-primary btn-success btn-danger").addClass("btn-warning");
           }
         });
       });
