@@ -18,10 +18,10 @@
         7 - Unsuccessful lookup of non-lob.li link
     */
 
-        $short = 124;
-        $link = 126;
-        $error = 173;
-        $title = "woof";
+        $short = "";
+        $link = "";
+        $error = "";
+        $title = "";
 
     $messages = array(
         "
@@ -96,7 +96,7 @@
         if(strpos($short, "http://") === false && strpos($short, "https://") === false){
             $short = "http://$short";
         }
-    	//echo shorten($shortdb, $short);
+    	echo shorten($shortdb, $short);
 
         foreach($messages as $message){
             echo $message;
