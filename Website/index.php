@@ -23,6 +23,7 @@
   */
 
   require('Include/PHP/db.php');
+  require('Include/PHP/functions.php');
 
   // This has been depreciated. Still here for backwards compatibility with existing links
   if(!empty($_GET['l'])){
@@ -31,6 +32,8 @@
     $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
     if($result = $shortdb->query($sql)){
       if($row = $result->fetch_assoc()){
+        tracking($sdb, $link);
+
         $link = $row['link'];
         header("location:$link");
         exit(5); // Stop script execution to save on resources
@@ -51,6 +54,8 @@
     $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
     if($result = $shortdb->query($sql)){
       if($row = $result->fetch_assoc()){
+        tracking($sdb, $link);
+
         $link = $row['link'];
         header("location:$link");
         exit(5); // Stop script execution to save on resources
