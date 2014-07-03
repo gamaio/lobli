@@ -1,18 +1,21 @@
 <?php
 
-	$seperator = "ᐖ"; // Chosen because it looks like a smiling face
+	require('Include/PHP/db.php');
 
 	// Returns will be in the structure: response code seperator extra data and will be formatted client side
 	/*
 		Response codes:
 		0 - Successful shorten
-		1 - Existing link found
-		2 - Dead link
-		3 - Database Error
-		4 - Sanitize failed
+        1 - Existing link found
+        2 - Dead link
+        3 - Database Error
+        4 - Sanitize failed
+        5 - Successful lob.li link resolve
+        6 - Successful lookup of non-lob.li link
+        7 - Unsuccessful lookup of non-lob.li link
 	*/
 
-	function shorten($sdb, $link){
+	function shorten($sdb, $link, $seperator){
 		$sql = "SELECT * FROM `links` WHERE `link` = '$link' LIMIT 1;";
 		if($result = $sdb->query($sql)){
 			if($row = $result->fetch_assoc()){
@@ -21,18 +24,47 @@
 			}
 		}
 		if(checkRemoteFile($link) !== true) return "2$seperator$link";
+		$title = getRemoteTitle($link);
+		
 		$short = substr(number_format(time() * mt_rand(),0,'',''),0,5); 
 		$short = base_convert($short, 10, 36); 
 		
 		$dpass = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
 		$dpass = base_convert($short.$dpass, 10, 36);
 
-		$sql = "INSERT INTO `links` (link, shortlink, dpass) VALUES ('$link', '$short', '$dpass')";
+		$sql = "INSERT INTO `links` (link, shortlink, title, dpass, ddate) VALUES ('$link', '$short', '$title', '$dpass', NOW())";
 
-		
-		if($result = $sdb->query($sql)): return "0$seperator$short";
+		if($result = $sdb->query($sql)): return "0$seperator$short$seperator$title";
 		else: return '3'.$seperator.$sdb->error;
 		endif;
+	}
+
+	function stats($sdb, $seperator){
+
+	}
+
+	function tracking($sdb, $lId){ // Very basic - counts number of total visits to a certain short link
+		$sql = "SELECT * FROM `tracking` WHERE `id` = '$lId' LIMIT 1;"; // Testing to see if the link has been visited before
+		if($result = $sdb->query($sql)){
+			if($row = $result->fetch_assoc()){ 
+				$sql = "UPDATE `tracking` SET `clicks` = `clicks` + 1 WHERE `id` = '$lId'"; // Yes it has, increment clicks by 1
+				if($result = $sdb->query($sql)){}else{
+					return $sdb->error;
+				}
+			}
+		}else{
+			$sql = "INSERT INTO `tracking` (id, clicks) VALUES ('$lId', 1)"; // No it hasn't, add 1 click to the table
+			if($result = $sdb->query($sql)){}else{
+				return $sdb->error;
+			}
+		}
+	}
+
+	function getRemoteTitle($url){
+		$url = parse_url($url);
+		$tags = get_meta_tags($url['scheme'].'://'.$url['host']);
+		$ret = sanitize($tags['description']);
+		return $ret;
 	}
 
 	function checkRemoteFile($ip=null){
