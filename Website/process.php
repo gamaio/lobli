@@ -5,6 +5,8 @@
     $catchid = $catches[0];
     $catchVal = $catches[1];
 
+    $seperator = "ᐖ"; // Chosen because it looks like a smiling face
+
     // Returns will be in the structure: Message code / seperator / extra data and will be formatted client side
     /*
         Message codes:
@@ -96,11 +98,11 @@
         if(strpos($short, "http://") === false && strpos($short, "https://") === false){
             $short = "http://$short";
         }
-    	echo shorten($shortdb, $short);
+    	echo shorten($shortdb, $short, $seperator);
 
-        foreach($messages as $message){
-            echo $message;
-        }
+        //foreach($messages as $message){
+        //    echo $message;
+        //}
 
     }else{ die("<div id=\"danger\" class=\"alert alert-danger\">I can't do my job if I'm not given a link to work on...</div>"); }
 
