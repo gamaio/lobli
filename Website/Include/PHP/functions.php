@@ -43,23 +43,6 @@
 
 	}
 
-	function tracking($sdb, $lId){ // Very basic - counts number of total visits to a certain short link
-		$sql = "SELECT * FROM `tracking` WHERE `id` = '$lId' LIMIT 1;"; // Testing to see if the link has been visited before
-		if($result = $sdb->query($sql)){
-			if($row = $result->fetch_assoc()){ 
-				$sql = "UPDATE `tracking` SET `clicks` = `clicks` + 1 WHERE `id` = '$lId'"; // Yes it has, increment clicks by 1
-				if($result = $sdb->query($sql)){}else{
-					return $sdb->error;
-				}
-			}
-		}else{
-			$sql = "INSERT INTO `tracking` (id, clicks) VALUES ('$lId', 1)"; // No it hasn't, add 1 click to the table
-			if($result = $sdb->query($sql)){}else{
-				return $sdb->error;
-			}
-		}
-	}
-
 	function getRemoteTitle($url){
 		$url = parse_url($url);
 		$tags = get_meta_tags($url['scheme'].'://'.$url['host']);
