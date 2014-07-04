@@ -11,6 +11,41 @@
   $catchVal = base_convert($catchVal.$catchid, 10, 36);
   $_SESSION['catch'] = $catchid.":".$catchVal;
 
+  require('Include/PHP/db.php');
+
+  function followLink($shortdb, $link){
+    $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($link))));
+    $link = str_replace('/', '', $link);
+    
+    $sql = "SELECT * FROM `tracking` WHERE `id` = '$link' LIMIT 1;"; // Testing to see if the link has been visited before
+    if($result = $shortdb->query($sql)){
+      if($row = $result->fetch_assoc()){ 
+        $sql = "UPDATE `tracking` SET `clicks` = `clicks` + 1 WHERE `id` = '$link'"; // Yes it has, increment clicks by 1
+        if($result = $shortdb->query($sql)){
+          if($result->num_rows == 0){
+            die ($shortdb->error);
+          }
+        }
+      }
+    }else{
+      $sql = "INSERT INTO `tracking` (id, clicks) VALUES ('$link', 1)"; // No it hasn't, add 1 click to the table
+      if($result = $shortdb->query($sql)){
+        if($result->num_rows == 0){
+          die ($shortdb->error);
+        }
+      }
+    }
+
+    $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
+    if($result = $shortdb->query($sql)){
+      if($row = $result->fetch_assoc()){
+        $link = $row['link'];
+        //header("location:$link");
+        exit(5); // Stop script execution to save on resources
+      }
+    }
+  }
+
   // exit codes:
   /*
     exit 0 - Good script
@@ -22,23 +57,9 @@
       exit 13 - Shortener About redirection
   */
 
-  require('Include/PHP/db.php');
-  require('Include/PHP/functions.php');
-
   // This has been depreciated. Still here for backwards compatibility with existing links
   if(!empty($_GET['l'])){
-    $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($_GET['l']))));
-    $link = str_replace('/', '', $link);
-    $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
-    if($result = $shortdb->query($sql)){
-      if($row = $result->fetch_assoc()){
-        tracking($sdb, $link);
-
-        $link = $row['link'];
-        header("location:$link");
-        exit(5); // Stop script execution to save on resources
-      }
-    }
+    followLink($shortdb, $_GET['l']);
   }
 
   // New way to check for valid short links, two characters shorter than the if statement above
@@ -49,18 +70,7 @@
     if($key == "resolv"){ header("location:http://r.lob.li"); exit(12); }
     if($key == "about"){ header("location:http://a.lob.li"); exit(13); }
     
-    $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($key))));
-    $link = str_replace('/', '', $link);
-    $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
-    if($result = $shortdb->query($sql)){
-      if($row = $result->fetch_assoc()){
-        tracking($sdb, $link);
-
-        $link = $row['link'];
-        header("location:$link");
-        exit(5); // Stop script execution to save on resources
-      }
-    }
+    followLink($shortdb, $key);
   }
 ?>
 <!DOCTYPE html>
@@ -72,8 +82,8 @@
     <title>lob.li - Objective Links</title>
 
     <!-- Bootstrap -->
-    <link href="include/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="include/css/style.css?<?php echo time(); ?>" rel="stylesheet">
+    <link href="Include/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Include/CSS/style.css?<?php echo time(); ?>" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -127,7 +137,7 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="include/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="Include/Bootstrap/js/bootstrap.min.js"></script>
 
     <script type="text/javascript" language="JavaScript">
       jQuery(document).ready(function(){
