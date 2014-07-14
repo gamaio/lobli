@@ -2,7 +2,7 @@ body{
   /*background: #2f4f5b;*/
   background: #1a6b1a;
   background-image: url('../img/body.jpg');
-  font-family: "Verdana";
+  font-family: 'Montserrat', serif;
   min-width:100%;
 }
 
@@ -51,10 +51,10 @@ hr {
 }
 
 .header h3{
-  font-family: "Verdana Bold Italc";
-  font-size: 60px;
+  font-family: "Montserrat Bold Italc";
+  font-size: 52px;
   font-weight: 700;
-  margin-left: 24%;
+  margin-left: 21%;
   color: #53960f;
 }
 
