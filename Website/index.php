@@ -84,6 +84,7 @@
     <!-- Bootstrap -->
     <link href="Include/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="Include/CSS/style.css?<?php echo time(); ?>" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat">
 
     <link rel="shortcut icon" type="image/ico" href="lobli.ico"/>
     <link rel="shortcut icon" type="image/x-icon" href="lobli.ico"/>
