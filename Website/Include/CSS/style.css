@@ -1,7 +1,7 @@
 body{
   /*background: #2f4f5b;*/
-  background: #1a6b1a;
-  background-image: url('../img/body.jpg');
+  background: #526f4d;
+  /* background-image: url('../img/body.jpg'); */
   font-family: 'Montserrat', serif;
   min-width:100%;
 }
@@ -32,18 +32,18 @@ hr {
 
 .navbar {
   margin-bottom: 20px;
-  background: rgba(34, 32, 27, .6);
+  background: rgba(63, 78, 50, .6);
   border: none;
   width: 52%;
 }
 
 .active{
-  background: rgba(0,0,0,.5);
+  background: rgba(0,0,0,.3);
 }
 
 .navbar li a{
   font-size: 41px;
-  color: #355713;
+  color: #4a791a;
 }
 
 .navbar a:hover{
