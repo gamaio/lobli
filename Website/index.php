@@ -12,8 +12,10 @@
   $_SESSION['catch'] = $catchid.":".$catchVal;
 
   require('Include/PHP/db.php');
+  $redis = new Redis();
+  $redis->connect('127.0.0.1', 6379);
 
-  function followLink($shortdb, $link){
+  function followLink($shortdb, $redis, $link){
     $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($link))));
     $link = str_replace('/', '', $link);
     
@@ -36,14 +38,23 @@
       }
     }
 
-    $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
-    if($result = $shortdb->query($sql)){
-      if($row = $result->fetch_assoc()){
-        $link = $row['link'];
-        //header("location:$link");
-        exit(5); // Stop script execution to save on resources
+    // Try to find it in the redis db first, if not there, add it
+
+    $short = $redis->get($link);
+    if (!$short) {
+      $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
+      if($result = $shortdb->query($sql)){
+        if($row = $result->fetch_assoc()){
+          $llink = $row['link'];
+
+          $redis->set($link, $llink);
+
+          echo $llink
+
+          //header("location:$link");
+          exit(5); // Stop script execution to save on resources
+        }
       }
-    }
   }
 
   // exit codes:
@@ -59,7 +70,7 @@
 
   // This has been depreciated. Still here for backwards compatibility with existing links
   if(!empty($_GET['l'])){
-    followLink($shortdb, $_GET['l']);
+    followLink($shortdb, $redis, $_GET['l']);
   }
 
   // New way to check for valid short links, two characters shorter than the if statement above
@@ -70,7 +81,7 @@
     if($key == "resolv"){ header("location:http://r.lob.li"); exit(12); }
     if($key == "about"){ header("location:http://a.lob.li"); exit(13); }
     
-    followLink($shortdb, $key);
+    followLink($shortdb, $redis, $key);
   }
 ?>
 <!DOCTYPE html>
