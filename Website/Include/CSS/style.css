@@ -32,22 +32,21 @@ hr {
 
 .navbar {
   margin-bottom: 20px;
-  background: rgba(0, 0, 0, .3);
+  background: rgba(63, 78, 50, .6);
   border: none;
-  width: 51.8%;
+  width: 52%;
 }
 
 .active{
-  background: rgba(0,0,0,.4);
+  background: rgba(0,0,0,.3);
 }
 
 .navbar li a{
   font-size: 41px;
-  color: #ccc;
+  color: #4a791a;
 }
 
-.navbar li a:hover{
-  color: #9ab4d5;
+.navbar a:hover{
   background: rgba(34, 32, 27, 1);
 }
 
@@ -56,7 +55,7 @@ hr {
   font-size: 52px;
   font-weight: 700;
   margin-left: 21%;
-  color: #ccc;
+  color: #53960f;
 }
 
 .spacer{
