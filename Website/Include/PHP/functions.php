@@ -67,7 +67,7 @@
 	    curl_setopt($curlInit, CURLOPT_CONNECTTIMEOUT, 10);
 	    curl_setopt($curlInit, CURLOPT_HEADER, true);
 	    curl_setopt($curlInit, CURLOPT_RETURNTRANSFER, true);
-	    curl_setopt($curlInit, CURLOPT_USERAGENT, 'UnPS-GAMATechnologies (UnPS WebQuery/4-2.9; +http://lob.li)');
+	    curl_setopt($curlInit, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; UnPS-GAMATechnologies (UnPS WebQuery/4-2.9; +http://lob.li))');
 	    curl_setopt($curlInit, CURLOPT_HTTPHEADER, $header);
 
 	    $response = curl_exec($curlInit);
