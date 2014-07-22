@@ -19,7 +19,7 @@
     $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($link))));
     $link = str_replace('/', '', $link);
     
-    $sql = "SELECT * FROM `tracking` WHERE `id` = '$link' LIMIT 1;"; // Testing to see if the link has been visited before
+   $sql = "SELECT * FROM `tracking` WHERE `id` = '$link' LIMIT 1;"; // Testing to see if the link has been visited before
     if($result = $shortdb->query($sql)){
       if($row = $result->fetch_assoc()){ 
         $sql = "UPDATE `tracking` SET `clicks` = `clicks` + 1 WHERE `id` = '$link'"; // Yes it has, increment clicks by 1
@@ -41,7 +41,7 @@
     // Try to find it in the redis db first, if not there, add it
 
     $short = $redis->get($link);
-    if (!$short) {
+    if (!$short || $short == null) {
       $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
       if($result = $shortdb->query($sql)){
         if($row = $result->fetch_assoc()){
@@ -49,12 +49,16 @@
 
           $redis->set($link, $llink);
 
-          echo $llink
+          echo $llink;
 
           //header("location:$link");
           exit(5); // Stop script execution to save on resources
         }
       }
+    }else{
+      echo $short;
+      exit(5);
+    }
   }
 
   // exit codes:
