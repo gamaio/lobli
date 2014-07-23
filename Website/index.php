@@ -12,8 +12,6 @@
   $_SESSION['catch'] = $catchid.":".$catchVal;
 
   require('Include/PHP/db.php');
-  $redis = new Redis();
-  $redis->connect('127.0.0.1', 6379);
 
   function followLink($shortdb, $redis, $link){
     $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($link))));
@@ -126,7 +124,7 @@
               <input type="hidden" name="<?php echo $catchid; ?>" value="<?php echo $catchVal; ?>"/>
               <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary btn-lg submitbtn" id="short-button">
-                  <span class="glyphicon glyphicon-share-alt icon-rotate"></span>
+                  <span class="glyphicon glyphicon-chevron-down"></span>
                 </button>
               </span>
             </div><!-- /input-group -->
