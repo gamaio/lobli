@@ -41,9 +41,11 @@
 		    if($linkage == '1') $xTime = 604800;
 		    if($linkage == '2') $xTime = 2628000;
 
-		    $redis->setex("links:id:$short", $xTime, $link);
-		    $redis->setex("links:title:$short", $xTime, $title);
-		    $redis->setex("links:date:$short", $xTime, date("d/m/Y", strtotime($str)));
+		    $redis->rpush("links:$short", $link);
+		    $redis->rpush("links:$short", $title);
+		    $redis->rpush("links:$short", date("d/m/Y", strtotime($str)));
+		    $redis->expire("links:$short", $xTime);
+
 		    $redis->setex("tracking:clicks:$link", $xTime, 1);
 
 		    return "0$seperator$short$seperator$title";
