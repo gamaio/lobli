@@ -115,11 +115,21 @@
       <?php include('Include/HTML/navbar.htm') ?>
 
       <div class="row">
-        <div class="col-md-3"></div>
+        <div class="col-md-3">
+          <div class="linkage">How long should I keep your link?</div>
+        </div>
         <div class="col-md-6">
           <h2 class="form-shorten-heading">Please give me a link to shorten...</h2>
           <form class="form-shorten form-inline" id="form-shorten" role="form">
             <div class="input-group">
+              <span class="input-group-addon lexp">
+                <select name="linkage" id="linkage">
+                  <option selected="selected">24hrs</option>
+                  <option>1 Week</option>
+                  <option>1 Month</option>
+                  <option>Forever</option>
+                </select>
+              </span>
               <input type="text" class="form-control input-lg" id="link" name="link" placeholder="http://" required autofocus>
               <input type="hidden" name="<?php echo $catchid; ?>" value="<?php echo $catchVal; ?>"/>
               <span class="input-group-btn">
@@ -160,6 +170,10 @@
       jQuery(document).ready(function(){
         $('#link').focus();
         $('#homelink').addClass('active');
+      });
+
+      $(function () {
+        $("[rel='tooltip']").tooltip();
       });
 
       function copyToClipboard(text){
