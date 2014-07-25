@@ -1,6 +1,22 @@
 <?php
   session_start();
 
+  /*
+      Redis scheme:
+      links:
+        id:
+          link id - set to website
+        title:
+          link id - set to page description
+        date:
+          link id - set to today's date
+      tracking:
+        clicks:
+          link id - int, increments with each unique IP
+        ip:
+          link id - list holding all visiting IPs for that link
+  */
+
   // Generate a token on the fly. This should prevent POST spam attacks directly into process.php
   $token = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
   $token = base_convert($token, 10, 36); 
@@ -13,47 +29,31 @@
 
   require('Include/PHP/db.php');
 
-  function followLink($shortdb, $redis, $link){
-    $link = $shortdb->real_escape_string(strtolower(stripslashes(strip_tags($link))));
-    $link = str_replace('/', '', $link);
-    
-   $sql = "SELECT * FROM `tracking` WHERE `id` = '$link' LIMIT 1;"; // Testing to see if the link has been visited before
-    if($result = $shortdb->query($sql)){
-      if($row = $result->fetch_assoc()){ 
-        $sql = "UPDATE `tracking` SET `clicks` = `clicks` + 1 WHERE `id` = '$link'"; // Yes it has, increment clicks by 1
-        if($result = $shortdb->query($sql)){
-          if($result->num_rows == 0){
-            die ($shortdb->error);
-          }
+  function followLink($redis, $link){
+    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) { // Get true IP of visiter if going through cloudflare
+      $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+    }
+
+    $ipTrack = $redis->lRange("tracking:ip:$link", 0, -1);
+    if(!in_array($_SERVER['REMOTE_ADDR'], $ipTrack)){ // Check to see if visiter hit this link before (This would make it a lot easier to skew statistics if anyone would register multiples times)
+      $redis->rPush("tracking:ip:$link", $_SERVER['REMOTE_ADDR']);
+
+      // Tracking code
+      $tracking = $redis->get("tracking:clicks:$link");
+      $trTtl = $redis->ttl("links:id:$link");
+
+      if(!$tracking || $trTtl != -2){
+        $tracking = $redis->set("tracking:clicks:$link", 1);
+      }else{
+        if($trTtl == -2){ // The link has been deleted, no need to track it anymore
+          break;
         }
-      }
-    }else{
-      $sql = "INSERT INTO `tracking` (id, clicks) VALUES ('$link', 1)"; // No it hasn't, add 1 click to the table
-      if($result = $shortdb->query($sql)){
-        if($result->num_rows == 0){
-          die ($shortdb->error);
-        }
+        $tracking = $redis->incr("tracking:clicks:$link");
       }
     }
 
-    // Try to find it in the redis db first, if not there, add it
-
-    $short = $redis->get($link);
-    if (!$short || $short == null) {
-      $sql = "SELECT * FROM `links` WHERE `shortlink` = '$link' LIMIT 1;";
-      if($result = $shortdb->query($sql)){
-        if($row = $result->fetch_assoc()){
-          $llink = $row['link'];
-
-          $redis->set($link, $llink);
-
-          echo $llink;
-
-          //header("location:$link");
-          exit(5); // Stop script execution to save on resources
-        }
-      }
-    }else{
+    $short = $redis->get("links:id:$link");
+    if($short){
       echo $short;
       exit(5);
     }
@@ -72,7 +72,7 @@
 
   // This has been depreciated. Still here for backwards compatibility with existing links
   if(!empty($_GET['l'])){
-    followLink($shortdb, $redis, $_GET['l']);
+    followLink($redis, $_GET['l']);
   }
 
   // New way to check for valid short links, two characters shorter than the if statement above
@@ -83,7 +83,7 @@
     if($key == "resolv"){ header("location:http://r.lob.li"); exit(12); }
     if($key == "about"){ header("location:http://a.lob.li"); exit(13); }
     
-    followLink($shortdb, $redis, $key);
+    followLink($redis, $key);
   }
 ?>
 <!DOCTYPE html>
@@ -124,10 +124,10 @@
             <div class="input-group">
               <span class="input-group-addon lexp">
                 <select name="linkage" id="linkage">
-                  <option selected="selected">24hrs</option>
-                  <option>1 Week</option>
-                  <option>1 Month</option>
-                  <option>Forever</option>
+                  <option value="0" selected="selected">24hrs</option>
+                  <option value="1">1 Week</option>
+                  <option value="2">1 Month</option>
+                  <option value="3">Forever</option>
                 </select>
               </span>
               <input type="text" class="form-control input-lg" id="link" name="link" placeholder="http://" required autofocus>
@@ -170,10 +170,6 @@
       jQuery(document).ready(function(){
         $('#link').focus();
         $('#homelink').addClass('active');
-      });
-
-      $(function () {
-        $("[rel='tooltip']").tooltip();
       });
 
       function copyToClipboard(text){

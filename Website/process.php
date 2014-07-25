@@ -18,6 +18,7 @@
         5 - Successful lob.li link resolve
         6 - Successful lookup of non-lob.li link
         7 - Unsuccessful lookup of non-lob.li link
+        8 - Lookup of link Stats (returns 8 $sep JSONarray)
     */
 
         $short = "";
@@ -26,40 +27,6 @@
         $title = "";
 
     $messages = array(
-        "
-            <div class=\"alert alert-success\" id=\"success\">
-                Your link: <a href=\"http://lob.li/$short\" title=\"$title\" target=\"lobli.$short\">lob.li/$short</a>
-                <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
-                    <!--<a href=\"#\" id=\"newlink\" title=\"New Link\"> This would require changing how I generate links, and I don't feel like doing it right now - 6/22/12 1:21am EST
-                      <span class=\"glyphicon glyphicon-refresh\" style=\"float:right;\"></span>
-                    </a>-->
-                    <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
-                </a>
-            </div>
-        ",
-        "
-            <div class=\"alert alert-warning\" id=\"warning\">
-                Existing link: <a href=\"http://lob.li/$short\" title=\"$title\" target=\"lobli.$short\">lob.li/$short</a>
-                 <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
-                    <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
-                </a>
-            </div>
-        ",
-        "
-            <div class=\"alert alert-danger\" id=\"danger\">
-                ERROR! - Your link: <a href=\"$link\" target=\"$link\">$link</a> didn't resolve to a website. <br />Please check your link and try again.
-            </div>
-        ", 
-        "
-            <div class=\"alert alert-danger\" id=\"danger\">
-                ERROR! - Well this is embarrassing... This never happens, but I appear to have suffered a database error. <br />Here's what I know: $error
-            </div>
-        ",
-        "
-            <div class=\"alert alert-danger\" id=\"danger\">
-                ERROR! - The sanitize function seems to have failed. This shouldn't happen, maybe <a href=\"mailto:c0de@unps.us\">c0de</a> forgot a semi-colon somewhere or something. 
-            </div>
-        ",
         "
             <div class=\"alert alert-success\" id=\"success\">
                 Your Resolved link: <a href=\"$link\" title=\"$title\">
@@ -87,18 +54,125 @@
         "
         );
 
-    if(empty($_GET['token']) || $_GET['token'] != $_SESSION['token'] || empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
-        die("<div id=\"danger\" class=\"alert alert-danger\">Oh Noes! Something happened and I can't continue.<br />Please try again by using the form located at <a href=\"http://lob.li\">lob.li</a>.</div>");
-    } 
-
 	require('Include/PHP/functions.php');
 
-	if(!empty($_POST['link'])){
-    	$short = sanitize($_POST['link']);
+    if(!isset($_GET['getstats'])){
+        $stats = stats($redis, $seperator);
+        $stats = explode($seperator, $stats);
+
+        if(!empty($_GET['type'])){
+            if($_GET['type'] == "htmltable"){
+                foreach($stats as $stat){ // There should only be 5, but the page doesn't limit how many
+                    $id = explode(":", $stat);
+                    $id = $id[2]; // Grab just the short link ID
+
+                    $linkData = $redis->lRange("links:$id", 0, -1);
+
+                    $link = $linkData[0];
+                    $title = $linkData[1];
+                    $date = $linkData[2];
+                    $trackClicks = $redis->get("tracking:clicks:$id");
+
+                    echo "
+                        <tr class=\"success\">
+                            <td></td>
+                            <td class=\"centertab\"><a href=\"#\">$id</a></td>
+                            <td><a href=\"$link\" title=\"$title\" class="res">$link</a></td>
+                            <td class=\"centertab\">$trackClicks</td>
+                            <td>$date</td>
+                        </tr>
+                    ";
+                }
+            }elseif($_GET['type'] == "json"){
+                echo $stats[1];
+                exit;
+            }else{
+                die("ERROR: Wrong type. I accept htmltable or json as my type<br>htmltable will send the partial table that loads on <a href=\"http://s.lob.li\">lob.li/stats</a>, json outputs raw json array");
+            }
+        }
+    }
+
+	if(!empty($_POST['link']) && !empty($_POST['linkage'])){
+        if(empty($_GET['token']) || $_GET['token'] != $_SESSION['token'] || empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
+            die("<div id=\"danger\" class=\"alert alert-danger\">Oh Noes! Something happened and I can't continue.<br />Please try again by using the form located at <a href=\"http://lob.li\">lob.li</a>.</div>");
+        } 
+
+    	//$short = sanitize($_POST['link'], $seperator);
+        $short = $_POST['link'];
+        $linkage = $_POST['linkage'];
+        //echo $short;
         if(strpos($short, "http://") === false && strpos($short, "https://") === false){
             $short = "http://$short";
         }
-    	echo shorten($shortdb, $short, $seperator);
+
+    	echo shorten($redis, $short, $linkage, $seperator);
+
+        $reShort = shorten($redis, $short, $linkage, $seperator);
+        $reShort = explode($seperator, $reShort);
+        $retCode = $reShort[0];
+
+        switch($retCode){
+            case "0": // Successful link Shorten
+                $short = $reShort[1];
+                $title = $reShort[2];
+                echo "
+                    <div class=\"alert alert-success\" id=\"success\">
+                        Your link: <a href=\"http://lob.li/$short\" title=\"$title\" target=\"lobli.$short\">lob.li/$short</a>
+                        <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
+                            <!--<a href=\"#\" id=\"newlink\" title=\"New Link\"> This would require changing how I generate links, and I don't feel like doing it right now - 6/22/12 1:21am EST
+                              <span class=\"glyphicon glyphicon-refresh\" style=\"float:right;\"></span>
+                            </a>-->
+                            <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
+                        </a>
+                    </div>
+                ";
+                break;
+
+            case "1": // Existing Short Link Found
+                $short = $reShort[1];
+                $title = $reShort[2];
+                echo "
+                    <div class=\"alert alert-warning\" id=\"warning\">
+                        Existing link: <a href=\"http://lob.li/$short\" title=\"$title\" target=\"lobli.$short\">lob.li/$short</a>
+                         <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
+                            <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
+                        </a>
+                    </div>
+                ";
+                break;
+
+            case "2": // Dead Link
+                $link = $reShort[1];
+                echo "
+                    <div class=\"alert alert-danger\" id=\"danger\">
+                        ERROR! - Your link: <a href=\"$link\" target=\"$link\">$link</a> didn't resolve to a website. <br />Please check your link and try again.
+                    </div>
+                ";
+                break;
+
+            case "3": // DB Error
+                $error = $reShort[1];
+                echo "
+                    <div class=\"alert alert-danger\" id=\"danger\">
+                        ERROR! - Well this is embarrassing... This never happens, but I appear to have suffered a database error. <br />Here's what I know: $error
+                    </div>
+                ";
+                break;
+
+            case "4": // Sanitize Failure Error
+                echo "
+                    <div class=\"alert alert-danger\" id=\"danger\">
+                        ERROR! - The sanitize function seems to have failed. This shouldn't happen, maybe <a href=\"mailto:c0de@unps.us\">c0de</a> forgot a semi-colon somewhere or something. 
+                    </div>
+                ";
+                break;
+
+            default:
+                echo "<div id=\"danger\" class=\"alert alert-danger\">Oh Noes! Something happened and I can't continue.<br />Please try again by using the form located at <a href=\"http://lob.li\">lob.li</a>.</div>";
+                break;
+        }
+
+        exit;
 
         //foreach($messages as $message){
         //    echo $message;
