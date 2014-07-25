@@ -41,54 +41,57 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td>
-                   <div id="theLoader" style="padding-left:10%;">
-                    <div class="wrap">
-                      <div class="loading">
-                        <span class="title">loading....</span>
-                        <span class="text">Please Wait</span>
+              <div class="stattable">
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>
+                     <div id="theLoader" style="padding-left:10%;">
+                      <div class="wrap">
+                        <div class="loading">
+                          <span class="title">loading....</span>
+                          <span class="text">Please Wait</span>
+                        </div>
                       </div>
-                    </div>
-                </td>
-              </tr>
-              <tr class="success">
-                <td></td>
-                <td class="centertab"><a href="#">1</a></td>
-                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                <td class="centertab">44444</td>
-                <td>00/00/0000</td>
-              </tr>
-              <tr class="success">
-                <td></td>
-                <td class="centertab"><a href="#">6</a></td>
-                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                <td class="centertab">44444</td>
-                <td>00/00/0000</td>
-              </tr>
-              <tr class="success">
-                <td></td>
-                <td class="centertab"><a href="#">236</a></td>
-                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                <td class="centertab">44444</td>
-                <td>00/00/0000</td>
-              </tr>
-              <tr class="success">
-                <td></td>
-                <td class="centertab"><a href="#">f42</a></td>
-                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                <td class="centertab">44444</td>
-                <td>00/00/0000</td>
-              </tr>
-              <tr class="success">
-                <td></td>
-                <td class="centertab"><a href="#">tg54<a></td>
-                <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                <td class="centertab">44444</td>
-                <td>00/00/0000</td>
-              </tr>
+                  </td>
+                </tr>
+
+                <!--<tr class="success">
+                  <td></td>
+                  <td class="centertab"><a href="#">1</a></td>
+                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                  <td class="centertab">44444</td>
+                  <td>00/00/0000</td>
+                </tr>
+                <tr class="success">
+                  <td></td>
+                  <td class="centertab"><a href="#">6</a></td>
+                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                  <td class="centertab">44444</td>
+                  <td>00/00/0000</td>
+                </tr>
+                <tr class="success">
+                  <td></td>
+                  <td class="centertab"><a href="#">236</a></td>
+                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                  <td class="centertab">44444</td>
+                  <td>00/00/0000</td>
+                </tr>
+                <tr class="success">
+                  <td></td>
+                  <td class="centertab"><a href="#">f42</a></td>
+                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                  <td class="centertab">44444</td>
+                  <td>00/00/0000</td>
+                </tr>
+                <tr class="success">
+                  <td></td>
+                  <td class="centertab"><a href="#">tg54<a></td>
+                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
+                  <td class="centertab">44444</td>
+                  <td>00/00/0000</td>
+                </tr>-->
+              </div>
             </tbody>
           </table>
         </div>
@@ -110,6 +113,10 @@
     <script type="text/javascript" language="JavaScript">
       jQuery(document).ready(function(){
         $('#statlink').addClass('active');
+
+        $.get("process.php?getstats&type=htmltable", function(data) {
+          $(".stattable").html(data);
+        });
       });
 
       $(function(){
