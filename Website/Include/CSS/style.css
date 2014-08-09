@@ -190,7 +190,7 @@ hr {
   text-align: center;
 }
 
-/* #theLoader{ display: none; } */
+#theLoader{ display: none; }
 
   @-webkit-keyframes title {
     0% {
