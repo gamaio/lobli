@@ -34,6 +34,7 @@
 		    	}
 		    } while (1);
 
+		    $now = time(NULL);
 		    $xTime = 3136320000; // About 100 years, give or take
 
 		    // Delete the links in 24 hours, 1 week, 1 month respectevly 
@@ -44,9 +45,10 @@
 		    $redis->rpush("links:$short", $link);
 		    $redis->rpush("links:$short", $title);
 		    $redis->rpush("links:$short", date("d/m/Y", strtotime($str)));
-		    $redis->expire("links:$short", $xTime);
+		    $redis->expireAt("links:$short", $now+$xTime);
 
-		    $redis->setex("tracking:clicks:$link", $xTime, 1);
+		    $redis->set("tracking:clicks:$link", 1);
+		    $redis->expireAt("tracking:clicks:$link", $now+$xTime);
 
 		    return "0$seperator$short$seperator$title";
  	    }
