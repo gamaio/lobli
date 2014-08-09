@@ -56,7 +56,7 @@
 
 	require('Include/PHP/functions.php');
 
-    if(!isset($_GET['getstats'])){
+    if(isset($_GET['getstats'])){
         $stats = stats($redis, $seperator);
         $stats = explode($seperator, $stats);
 
