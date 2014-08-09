@@ -7,8 +7,8 @@
     <title>lob.li - Objective Links | About Us</title>
 
     <!-- Bootstrap -->
-    <link href="include/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="include/css/style.css?<?php echo time(); ?>" rel="stylesheet">
+    <link href="Include/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Include/CSS/style.css?<?php echo time(); ?>" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat">
 
     <link rel="shortcut icon" type="image/ico" href="lobli.ico"/>
@@ -59,7 +59,7 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="include/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="Include/Bootstrap/js/bootstrap.min.js"></script>
 
     <script type="text/javascript" language="JavaScript">
       jQuery(document).ready(function(){
