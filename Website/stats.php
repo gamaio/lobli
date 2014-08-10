@@ -52,7 +52,7 @@
               foreach($stats as $id){ // There should only be 5, but the page doesn't limit how many
                 $trTtl = $redis->ttl("links:$id");
                 if($trTtl == -2){ // The link has been deleted, no need to track it anymore
-                  $redis->zRem("tracking:clicks", $id;
+                  $redis->zRem("tracking:clicks", $id);
                   continue;
                 }
 
