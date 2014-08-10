@@ -38,21 +38,19 @@
     if(!in_array($_SERVER['REMOTE_ADDR'], $ipTrack)){ // Check to see if visiter hit this link before (This would make it a lot easier to skew statistics if anyone would register multiples times)
       $redis->rPush("tracking:ip:$link", $_SERVER['REMOTE_ADDR']);
 
-      // Tracking code
-      $tracking = $redis->get("tracking:clicks:$link");
-      $trTtl = $redis->ttl("links:id:$link");
+      $trTtl = $redis->ttl("links:$link");
 
-      if(!$tracking || $trTtl != -2){
-        $tracking = $redis->set("tracking:clicks:$link", 1);
+      if($trTtl != -2){
+        $tracking = $redis->zIncrBy("tracking:clicks", 1, $link);
       }else{
         if($trTtl == -2){ // The link has been deleted, no need to track it anymore
+          $redis->zRem("tracking:clicks", $link);
           break;
         }
-        $tracking = $redis->incr("tracking:clicks:$link");
       }
     }
 
-    $short = $redis->get("links:id:$link");
+    $short = $redis->get("links:$link");
     if($short){
       echo $short;
       exit(5);

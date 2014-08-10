@@ -45,20 +45,23 @@
 
               require('Include/PHP/db.php');
 
-              $stats = $redis->keys("tracking:clicks:*");
-              rsort($stats);
+              $stats = $redis->zRangeByScore("tracking:clicks", "-inf", "+inf");
+              $stats = array_reverse($stats);
               $stats = array_slice($stats, 0, 5, true);
 
-              foreach($stats as $stat){ // There should only be 5, but the page doesn't limit how many
-                $id = explode(":", $stat);
-                $id = $id[2]; // Grab just the short link ID
+              foreach($stats as $id){ // There should only be 5, but the page doesn't limit how many
+                $trTtl = $redis->ttl("links:$id");
+                if($trTtl == -2){ // The link has been deleted, no need to track it anymore
+                  $redis->zRem("tracking:clicks", $id;
+                  continue;
+                }
 
                 $linkData = $redis->lRange("links:$id", 0, -1);
 
                 $link = $linkData[0];
                 $title = $linkData[1];
                 $date = $linkData[2];
-                $trackClicks = $redis->get("tracking:clicks:$id");
+                $trackClicks = $redis->zScore("tracking:clicks", $id);
 
                 echo "
                     <tr class=\"success\">

@@ -47,8 +47,7 @@
 		    $redis->rpush("links:$short", date("d/m/Y", strtotime($str)));
 		    $redis->expireAt("links:$short", $now+$xTime);
 
-		    $redis->set("tracking:clicks:$link", 1);
-		    $redis->expireAt("tracking:clicks:$link", $now+$xTime);
+		    $redis->zAdd("tracking:clicks", 1, $link);
 
 		    return "0$seperator$short$seperator$title";
  	    }
