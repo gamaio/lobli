@@ -43,6 +43,8 @@
             <tbody>
               <?php
 
+              require('Include/PHP/db.php');
+
               $stats = $redis->keys("tracking:clicks:*");
               rsort($stats);
               $stats = array_slice($stats, 0, 5, true);
@@ -52,8 +54,6 @@
                 $id = $id[2]; // Grab just the short link ID
 
                 $linkData = $redis->lRange("links:$id", 0, -1);
-
-                print_r($linkData); exit;
 
                 $link = $linkData[0];
                 $title = $linkData[1];
