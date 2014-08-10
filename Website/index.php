@@ -45,14 +45,13 @@
       }else{
         if($trTtl == -2){ // The link has been deleted, no need to track it anymore
           $redis->zRem("tracking:clicks", $link);
-          break;
         }
       }
     }
 
-    $short = $redis->get("links:$link");
+    $short = $redis->lRange("links:$link", 0, 0);
     if($short){
-      echo $short;
+      header('location:'.$short[0]);
       exit(5);
     }
   }
@@ -68,14 +67,10 @@
       exit 13 - Shortener About redirection
   */
 
-  // This has been depreciated. Still here for backwards compatibility with existing links
-  if(!empty($_GET['l'])){
-    followLink($redis, $_GET['l']);
-  }
-
-  // New way to check for valid short links, two characters shorter than the if statement above
   if(!empty($_GET)){
     $key = key($_GET);
+
+    if($key == "l") $key = $_GET['l'];
 
     if($key == "stats"){ header("location:http://s.lob.li"); exit(11); }
     if($key == "resolv"){ header("location:http://r.lob.li"); exit(12); }
