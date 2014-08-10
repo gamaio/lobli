@@ -54,13 +54,6 @@
  	    }
 	}
 
-	function stats($redis, $seperator){
-		$tracking = $redis->keys("tracking:clicks:*");
-		$tracking = rsort($tracking);
-		$tracking = array_slice($tracking, 0, 5, true);
-		return "8$seperator".json_encode($tracking);
-	}
-
 	function getRemoteTitle($url){
 		$url = parse_url($url);
 		if($tags = get_meta_tags($url['scheme'].'://'.$url['host'])){

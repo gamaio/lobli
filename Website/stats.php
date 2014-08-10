@@ -41,57 +41,37 @@
               </tr>
             </thead>
             <tbody>
-              <div class="stattable">
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td>
-                     <div id="theLoader" style="padding-left:10%;">
-                      <div class="wrap">
-                        <div class="loading">
-                          <span class="title">loading....</span>
-                          <span class="text">Please Wait</span>
-                        </div>
-                      </div>
-                  </td>
-                </tr>
+              <?php
 
-                <!--<tr class="success">
-                  <td></td>
-                  <td class="centertab"><a href="#">1</a></td>
-                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                  <td class="centertab">44444</td>
-                  <td>00/00/0000</td>
-                </tr>
-                <tr class="success">
-                  <td></td>
-                  <td class="centertab"><a href="#">6</a></td>
-                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                  <td class="centertab">44444</td>
-                  <td>00/00/0000</td>
-                </tr>
-                <tr class="success">
-                  <td></td>
-                  <td class="centertab"><a href="#">236</a></td>
-                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                  <td class="centertab">44444</td>
-                  <td>00/00/0000</td>
-                </tr>
-                <tr class="success">
-                  <td></td>
-                  <td class="centertab"><a href="#">f42</a></td>
-                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                  <td class="centertab">44444</td>
-                  <td>00/00/0000</td>
-                </tr>
-                <tr class="success">
-                  <td></td>
-                  <td class="centertab"><a href="#">tg54<a></td>
-                  <td><a href="#" title="Resolved website title" class="res">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a></td>
-                  <td class="centertab">44444</td>
-                  <td>00/00/0000</td>
-                </tr>-->
-              </div>
+              $stats = $redis->keys("tracking:clicks:*");
+              rsort($stats);
+              $stats = array_slice($stats, 0, 5, true);
+
+              foreach($stats as $stat){ // There should only be 5, but the page doesn't limit how many
+                $id = explode(":", $stat);
+                $id = $id[2]; // Grab just the short link ID
+
+                $linkData = $redis->lRange("links:$id", 0, -1);
+
+                print_r($linkData); exit;
+
+                $link = $linkData[0];
+                $title = $linkData[1];
+                $date = $linkData[2];
+                $trackClicks = $redis->get("tracking:clicks:$id");
+
+                echo "
+                    <tr class=\"success\">
+                        <td></td>
+                        <td class=\"centertab\"><a href=\"#\">$id</a></td>
+                        <td><a href=\"$link\" title=\"$title\" class=\"res\">$link</a></td>
+                        <td class=\"centertab\">$trackClicks</td>
+                        <td>$date</td>
+                    </tr>
+                ";
+                }
+
+              ?>
             </tbody>
           </table>
         </div>
@@ -113,10 +93,6 @@
     <script type="text/javascript" language="JavaScript">
       jQuery(document).ready(function(){
         $('#statlink').addClass('active');
-
-        $.get("process.php?getstats&type=htmltable", function(data) {
-          $(".stattable").html(data);
-        });
       });
 
       $(function(){

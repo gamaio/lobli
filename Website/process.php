@@ -56,42 +56,6 @@
 
 	require('Include/PHP/functions.php');
 
-    if(isset($_GET['getstats'])){
-        $stats = stats($redis, $seperator);
-        $stats = explode($seperator, $stats);
-
-        if(!empty($_GET['type'])){
-            if($_GET['type'] == "htmltable"){
-                foreach($stats as $stat){ // There should only be 5, but the page doesn't limit how many
-                    $id = explode(":", $stat);
-                    $id = $id[2]; // Grab just the short link ID
-
-                    $linkData = $redis->lRange("links:$id", 0, -1);
-
-                    $link = $linkData[0];
-                    $title = $linkData[1];
-                    $date = $linkData[2];
-                    $trackClicks = $redis->get("tracking:clicks:$id");
-
-                    echo "
-                        <tr class=\"success\">
-                            <td></td>
-                            <td class=\"centertab\"><a href=\"#\">$id</a></td>
-                            <td><a href=\"$link\" title=\"$title\" class=\"res\">$link</a></td>
-                            <td class=\"centertab\">$trackClicks</td>
-                            <td>$date</td>
-                        </tr>
-                    ";
-                }
-            }elseif($_GET['type'] == "json"){
-                echo $stats[1];
-                exit;
-            }else{
-                die("ERROR: Wrong type. I accept htmltable or json as my type<br>htmltable will send the partial table that loads on <a href=\"http://s.lob.li\">lob.li/stats</a>, json outputs raw json array");
-            }
-        }
-    }
-
 	if(!empty($_POST['link']) && !empty($_POST['linkage'])){
         if(empty($_GET['token']) || $_GET['token'] != $_SESSION['token'] || empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
             die("<div id=\"danger\" class=\"alert alert-danger\">Oh Noes! Something happened and I can't continue.<br />Please try again by using the form located at <a href=\"http://lob.li\">lob.li</a>.</div>");
