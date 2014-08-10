@@ -56,7 +56,7 @@
 
 	require('Include/PHP/functions.php');
 
-	if(!empty($_POST['link']) && !empty($_POST['linkage'])){
+	if(!empty($_POST['link']) || !empty($_POST['linkage'])){
         if(empty($_GET['token']) || $_GET['token'] != $_SESSION['token'] || empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
             die("<div id=\"danger\" class=\"alert alert-danger\">Oh Noes! Something happened and I can't continue.<br />Please try again by using the form located at <a href=\"http://lob.li\">lob.li</a>.</div>");
         } 
@@ -68,8 +68,6 @@
         if(strpos($short, "http://") === false && strpos($short, "https://") === false){
             $short = "http://$short";
         }
-
-    	echo shorten($redis, $short, $linkage, $seperator);
 
         $reShort = shorten($redis, $short, $linkage, $seperator);
         $reShort = explode($seperator, $reShort);
