@@ -66,7 +66,7 @@
                 echo "
                     <tr class=\"success\">
                         <td></td>
-                        <td class=\"centertab\"><a href=\"#\">$id</a></td>
+                        <td class=\"centertab\"><a href=\"http://lob.li/$id\">$id</a></td>
                         <td><a href=\"$link\" title=\"$title\" class=\"res\">$link</a></td>
                         <td class=\"centertab\">$trackClicks</td>
                         <td>$date</td>
