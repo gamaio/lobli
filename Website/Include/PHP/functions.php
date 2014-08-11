@@ -17,19 +17,22 @@
 	*/
 
 	function shorten($redis, $link, $linkage, $seperator){
-		$short = $redis->get("links:id:$link");
+		$short = $redis->get("llinks:$link");
 	    if($short){
-	    	$title = $redis->get("links:title:$link");
-	    	return "1$seperator$link$seperator$title";
+	    	$sId = $short;
+	    	$short = $redis->lrange("links:$short", 0, 1);
+	    	$title = $short[1];
+	    	return "1$seperator$sId$seperator$title";
 	    }else{
 	    	do {
 	    		if(checkRemoteFile($link) !== true) return "2$seperator$link";
-			    $title = getRemoteTitle($url);
+			    //if(($title = getRemoteTitle($url)) !== true) return "2$seperator$link"; 
+			    $title = "google";
 
 			    $short = substr(number_format(time() * mt_rand(),0,'',''),0,5); 
 			    $short = base_convert($short, 10, 36);
 
-		    	if(!$redis->exists("links:id:$short")) {
+		    	if(!$redis->exists("links:$short")) {
 		    		break; 
 		    	}
 		    } while (1);
@@ -42,10 +45,12 @@
 		    if($linkage == '1') $xTime = 604800;
 		    if($linkage == '2') $xTime = 2628000;
 
+		    $redis->set("llinks:$link", $short);
 		    $redis->rpush("links:$short", $link);
 		    $redis->rpush("links:$short", $title);
 		    $redis->rpush("links:$short", date("d/m/Y", strtotime($str)));
 		    $redis->expireAt("links:$short", $now+$xTime);
+		    $redis->expireAt("llinks:$link", $now+$xTime);
 
 		    $redis->zAdd("tracking:clicks", 1, $link);
 
