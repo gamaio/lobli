@@ -48,7 +48,7 @@
 		    $redis->set("llinks:$link", $short);
 		    $redis->rpush("links:$short", $link);
 		    $redis->rpush("links:$short", $title);
-		    $redis->rpush("links:$short", date("d/m/Y", strtotime($str)));
+		    $redis->rpush("links:$short", date("m/d/Y"));
 		    $redis->expireAt("links:$short", $now+$xTime);
 		    $redis->expireAt("llinks:$link", $now+$xTime);
 
