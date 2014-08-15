@@ -45,16 +45,36 @@
                   <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
                 </a>
             </div>
-        ",
-        "
-            <div class=\"alert alert-warning\" id=\"warning\">
-                Your link: <a href=\"$link\" title=\"$title\">
-                <span class=\"longlink\">$link</span></a> is not a lob.li link and has not been shortened.
-            </div>
         "
         );
 
 	require('Include/PHP/functions.php');
+
+    if(isset($_GET['resolve']) && !empty($_POST['link'])){
+        if(empty($_GET['token']) || $_GET['token'] != $_SESSION['token'] || empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
+            die("<div id=\"danger\" class=\"alert alert-danger\">Oh Noes! Something happened and I can't continue.<br />Please try again by using the form located at <a href=\"http://lob.li\">lob.li</a>.</div>");
+        }
+
+        $link = $_POST['link'];
+        $trTtl = $redis->ttl("links:$link");
+        if($trTtl == -2){ // Didn't find links:linkid, checking if long link
+            $trTtl = $redis->ttl("llinks:$link");
+            if($trTtl == -2){ // Didn't find that either, give error
+                echo "
+                    <div class=\"alert alert-warning\" id=\"warning\">
+                        Your link: <a href=\"$link\">
+                        <span class=\"longlink\">$link</span></a> is not a lob.li link and has not been shortened.
+                    </div>
+                ";
+                exit;
+            }
+        }
+
+        $short = $redis->lRange("links:$link", 0, 1);
+        print_r($short); exit;
+
+
+    }
 
 	if(!empty($_POST['link']) || !empty($_POST['linkage'])){
         if(empty($_GET['token']) || $_GET['token'] != $_SESSION['token'] || empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
