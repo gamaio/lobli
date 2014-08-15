@@ -26,8 +26,6 @@
 	    }else{
 	    	do {
 	    		if(checkRemoteFile($link) !== true) return "2$seperator$link";
-			    //if(($title = getRemoteTitle($url)) !== true) return "2$seperator$link"; 
-			    $title = "google";
 
 			    $short = substr(number_format(time() * mt_rand(),0,'',''),0,5); 
 			    $short = base_convert($short, 10, 36);
@@ -47,7 +45,6 @@
 
 		    $redis->set("llinks:$link", $short);
 		    $redis->rpush("links:$short", $link);
-		    $redis->rpush("links:$short", $title);
 		    $redis->rpush("links:$short", date("m/d/Y"));
 		    $redis->expireAt("links:$short", $now+$xTime);
 		    $redis->expireAt("llinks:$link", $now+$xTime);
@@ -56,14 +53,6 @@
 
 		    return "0$seperator$short$seperator$title";
  	    }
-	}
-
-	function getRemoteTitle($url){
-		$url = parse_url($url);
-		if($tags = get_meta_tags($url['scheme'].'://'.$url['host'])){
-			$ret = $tags['description'];
-			return $ret;
-		}else{ return false; }
 	}
 
 	function checkRemoteFile($ip=null){

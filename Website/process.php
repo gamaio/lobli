@@ -24,12 +24,11 @@
         $short = "";
         $link = "";
         $error = "";
-        $title = "";
 
     $messages = array(
         "
             <div class=\"alert alert-success\" id=\"success\">
-                Your Resolved link: <a href=\"$link\" title=\"$title\">
+                Your Resolved link: <a href=\"$link\">
                 <span class=\"longlink\">$link</span></a>
                   
                 <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('$link');\">
@@ -39,7 +38,7 @@
         ",
         "
             <div class=\"alert alert-warning\" id=\"warning\">
-                Your link: <a href=\"$link\" title=\"$title\">
+                Your link: <a href=\"$link\">
                 <span class=\"longlink2\">$link</span></a> is not a lob.li link.<br> However we found that it has been shortened. <a href=\"http://lob.li/$short\" title=\"$title\">lob.li/$short</a>
                 <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
                   <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
@@ -96,10 +95,9 @@
         switch($retCode){
             case "0": // Successful link Shorten
                 $short = $reShort[1];
-                $title = $reShort[2];
                 echo "
                     <div class=\"alert alert-success\" id=\"success\">
-                        Your link: <a href=\"http://lob.li/$short\" title=\"$title\" target=\"lobli.$short\">lob.li/$short</a>
+                        Your link: <a href=\"http://lob.li/$short\" target=\"lobli.$short\">lob.li/$short</a>
                         <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
                             <!--<a href=\"#\" id=\"newlink\" title=\"New Link\"> This would require changing how I generate links, and I don't feel like doing it right now - 6/22/12 1:21am EST
                               <span class=\"glyphicon glyphicon-refresh\" style=\"float:right;\"></span>
@@ -112,10 +110,9 @@
 
             case "1": // Existing Short Link Found
                 $short = $reShort[1];
-                $title = $reShort[2];
                 echo "
                     <div class=\"alert alert-warning\" id=\"warning\">
-                        Existing link: <a href=\"http://lob.li/$short\" title=\"$title\" target=\"lobli.$short\">lob.li/$short</a>
+                        Existing link: <a href=\"http://lob.li/$short\" target=\"lobli.$short\">lob.li/$short</a>
                          <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
                             <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
                         </a>

@@ -59,7 +59,6 @@
                 $linkData = $redis->lRange("links:$id", 0, -1);
 
                 $link = $linkData[0];
-                $title = $linkData[1];
                 $date = $linkData[2];
                 $trackClicks = $redis->zScore("tracking:clicks", $id);
 
@@ -67,7 +66,7 @@
                     <tr class=\"success\">
                         <td></td>
                         <td class=\"centertab\"><a href=\"http://lob.li/$id\">$id</a></td>
-                        <td><a href=\"$link\" title=\"$title\" class=\"res\">$link</a></td>
+                        <td><a href=\"$link\" class=\"res\">$link</a></td>
                         <td class=\"centertab\">$trackClicks</td>
                         <td>$date</td>
                     </tr>
