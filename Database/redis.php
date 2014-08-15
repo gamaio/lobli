@@ -1,8 +1,15 @@
 <?php
 
+	// You need an AI id, if you delete rows from your database (for example tos violation), I recommend resetting it.
+	// ALTER TABLE `links` DROP COLUMN `id`;
+	// ALTER TABLE `links` ADD COLUMN `id` int AUTO_INCREMENT PRIMARY KEY FIRST;
+	// These SQL commands will erase all your ids and add them again, giving you an easily indexed list of ids
+	// Take the last id from the table and put that in $ids. It should then add all your links to Redis.
+	// It is your job to do what you feel you need to for your sql table.
+
 	$ids = 461;
 
-	echo "mysql to redis migrator\nThis is very specific for the link shortener, and assumes 460 entries in table.\n";
+	echo "mysql to redis migrator\nThis is very specific for the link shortener, and assumes $ids entries in table.\n";
 	echo "Connecting to databases...\n";
 
 	$redis = new Redis();
