@@ -1,0 +1,30 @@
+server { # Lob.li
+        listen 80;
+        server_name lob.li;
+
+        access_log /home/www/log/short.access.log;
+        error_log /home/www/log/short.error.log;
+
+        root /home/www/lob.li/wroot/;
+        index index.php;
+        location / { try_files $uri $uri/ /index.php?$uri; }
+
+        # Ignore robots and favicon and deny all .ht* files
+        location = /robots.txt { log_not_found off; access_log off; }
+        location = /favicon.ico { log_not_found off; access_log off; }
+        location ~ /\.ht { deny  all; }
+
+        location ~ \.php$ {
+                try_files $uri = 404;
+                fastcgi_pass   unix:/tmp/php.socket;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include fastcgi_params;
+        }
+}
+
+server { # Lob.li dynamic subdomain thing
+        server_name "~^(?<subdomain>.+)\.lob\.li$";
+        rewrite ^/(.*?)/?$ http://lob.li/$subdomain;
+}
+
