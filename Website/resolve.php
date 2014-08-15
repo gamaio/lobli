@@ -103,7 +103,7 @@
         $("#theLoader").fadeIn("fast");
         event.preventDefault();
         event.stopPropagation();
-        $.post("process.php?token=<?php echo $token; ?>", $(this).serialize(), function(data){
+        $.post("process.php?resolve&token=<?php echo $token; ?>", $(this).serialize(), function(data){
           $("#message").hide().slideDown("fast");
           $("#theLoader").hide();
           if($('#danger').length){
