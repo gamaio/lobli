@@ -1,0 +1,41 @@
+{
+	"name": "lob.li link shortener",
+	"version": "0.0.1",
+	"manifest_version": 2,
+	"description": "lobli shortening and resolving without having to visit lob.li",
+	"homepage_url": "http://lob.li",
+	"browser_action": {
+		"default_icon": "icons/lobli-19.png",
+		"default_title": "lobli for Chrome"
+	},
+	"background": {
+		"page": "background.html",
+		"persistent": false
+	},
+	"permissions": [
+		"<all_urls>",
+		"tabs",
+		"clipboardWrite",
+		"contextMenus",
+		"notifications"
+	],
+	"icons": {
+		"16": "icons/lobli-16.png",
+		"32": "icons/lobli-32.png",
+		"48": "icons/lobli-48.png",
+		"128": "icons/lobli-128.png"
+	},
+	"web_accessible_resources": [
+		"icons/lobli-16.png",
+		"icons/lobli-19.png",
+		"icons/lobli-32.png",
+		"icons/lobli-48.png",
+		"icons/lobli-128.png"
+	],
+	"commands": {
+		"shortenTab": {
+			"suggested_key": { "default": "Alt+L" },
+			"description": "Shortens Current Tab"
+		}
+	}
+}
