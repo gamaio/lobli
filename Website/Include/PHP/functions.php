@@ -22,7 +22,7 @@
 	    	$sId = $short;
 	    	$short = $redis->lrange("links:$short", 0, 1);
 	    	$title = $short[1];
-	    	return "1$seperator$sId$seperator$title";
+	    	return "1$seperator$sId";
 	    }else{
 	    	do {
 	    		if(checkRemoteFile($link) !== true) return "2$seperator$link";
@@ -51,7 +51,7 @@
 
 		    $redis->zAdd("tracking:clicks", 1, $link);
 
-		    return "0$seperator$short$seperator$title";
+		    return "0$seperator$short$";
  	    }
 	}
 
