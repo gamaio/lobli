@@ -21,32 +21,6 @@
         8 - Lookup of link Stats (returns 8 $sep JSONarray)
     */
 
-        $short = "";
-        $link = "";
-        $error = "";
-
-    $messages = array(
-        "
-            <div class=\"alert alert-success\" id=\"success\">
-                Your Resolved link: <a href=\"$link\">
-                <span class=\"longlink\">$link</span></a>
-                  
-                <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('$link');\">
-                  <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
-                </a>
-            </div>
-        ",
-        "
-            <div class=\"alert alert-warning\" id=\"warning\">
-                Your link: <a href=\"$link\">
-                <span class=\"longlink2\">$link</span></a> is not a lob.li link.<br> However we found that it has been shortened. <a href=\"http://lob.li/$short\" title=\"$title\">lob.li/$short</a>
-                <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
-                  <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
-                </a>
-            </div>
-        "
-        );
-
 	require('Include/PHP/functions.php');
 
     if(isset($_GET['resolve']) && !empty($_POST['link'])){
@@ -55,9 +29,8 @@
         }
 
         if(!$redis->exists("tokens:".$_SESSION['token']) || $redis->get("tokens:".$_SESSION['token']) == 1){
-           echo "<script>alert('Invalid or expired token. Please try again');</script>";
            include("Include/PHP/token.php");
-           header("location:index.php");
+           echo "<script>window.location = \"index.php\";</script>";
         }
 
         $link = $_POST['link'];
@@ -75,13 +48,37 @@
             }
         }
 
-        $short = $redis->lRange("links:$link", 0, 1);
-        print_r($short); exit;
+        $short = $redis->lRange("links:$link", 0, 0);
+        if($short){
+            $link = $short[0];
+            echo "
+                <div class=\"alert alert-success\" id=\"success\">
+                    Your Resolved link: <a href=\"$link\">
+                    <span class=\"longlink\">$link</span></a>
+                      
+                    <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('$link');\">
+                      <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
+                    </a>
+                </div>
+            ";
+            exit;
+        }else{
+            $short = $redis->get("llinks:$link");
+            if($short){
+                echo  "
+                    <div class=\"alert alert-warning\" id=\"warning\">
+                        Your link: <a href=\"$link\">
+                        <span class=\"longlink2\">$link</span></a> is not a lob.li link.<br> However we found that it has been shortened. <a href=\"http://lob.li/$short\">lob.li/$short</a>
+                        <a href=\"#\" id=\"copylink\" title=\"Copy Link\" onclick=\"copyToClipboard('http://lob.li/$short');\">
+                          <span class=\"glyphicon glyphicon-link\" style=\"float:right;padding-right:1%;\"></span>
+                        </a>
+                    </div>
+                ";
+                exit;
+            }
+        }
 
-
-    }
-
-	if(!empty($_POST['link']) || !empty($_POST['linkage'])){
+    }elseif(!empty($_POST['link']) || !empty($_POST['linkage'])){
         if(empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
             die("<div id=\"danger\" class=\"alert alert-danger\">Oh Noes! Something happened and I can't continue.<br />Please try again by using the form located at <a href=\"http://lob.li\">lob.li</a>.</div>");
         } 

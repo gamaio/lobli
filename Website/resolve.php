@@ -1,3 +1,13 @@
+<?php
+  session_start();
+
+  require('Include/PHP/token.php');
+
+  $catchid = substr(number_format(time() * mt_rand(),0,'',''),0,10);
+  $catchVal = hash('sha256', $catchid.mt_rand().time().substr(number_format(time() * mt_rand(),0,'',''),0,10));
+  $catchVal = base_convert($catchVal.$catchid, 10, 36);
+  $_SESSION['catch'] = $catchid.":".$catchVal;
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -33,7 +43,7 @@
           <form class="form-shorten form-inline" id="form-shorten" role="form">
             <div class="input-group">
               <span class="input-group-addon">http://lob.li/</span>
-              <input type="text" class="form-control input-lg" id="link" placeholder="id" required autofocus>
+              <input type="text" class="form-control input-lg" id="link" name="link" placeholder="id" required autofocus>
               <input type="hidden" name="<?php echo $catchid; ?>" value="<?php echo $catchVal; ?>"/>
               <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary btn-lg submitbtn">
@@ -103,8 +113,8 @@
         $("#theLoader").fadeIn("fast");
         event.preventDefault();
         event.stopPropagation();
-        $.post("process.php?resolve&token=<?php echo $token; ?>", $(this).serialize(), function(data){
-          $("#message").hide().slideDown("fast");
+        $.post("process.php?resolve", $(this).serialize(), function(data){
+          $("#message").hide().html(data).slideDown("fast");
           $("#theLoader").hide();
           if($('#danger').length){
             $('#short-button').removeClass("btn-primary btn-success btn-warning").addClass("btn-danger");
