@@ -87,9 +87,8 @@
         } 
 
         if(!$redis->exists("tokens:".$_SESSION['token']) || $redis->get("tokens:".$_SESSION['token']) == 1){
-           echo "<script>alert('Invalid or expired token. Please try again');</script>";
            include("Include/PHP/token.php");
-           header("location:index.php");
+            echo "<script>window.location = \"index.php\";</script>";
         }
 
         $redis->set("tokens:".$_SESSION['token'], 1);
