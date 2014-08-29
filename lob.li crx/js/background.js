@@ -47,15 +47,20 @@ function shortenURL(url){ // Creates a short url and copies it to clipboard
 	if(testURL(url)){
 		sendAPIRequest("shorten&url=" + url, function(req){
 			var res = req.responseText.trim();
-			if(res == "dead"){
-				showAlert("Apparently the link is dead..."); 
-			}else if(res == "db"){
-				showAlert("I got a database error!");
-			}else if(res == "Error"){
-				showAlert("General Error.");
-			}else{
-				copyToClipboard("http://lob.li/" + res);
-				showAlert("Link shortened. Short link copied to clipboard!");
+			switch(res){
+				case "dead":
+					showAlert("Apparently the link is dead...");
+					break;
+				case "db": 
+					showAlert("I got a database error!");
+					break;
+				case "Error":
+					showAlert("General Error.");
+					break;
+				default:
+					copyToClipboard("http://lob.li/" + res);
+					showAlert("Link shortened. Short link copied to clipboard!");
+					break;
 			}
 		});
 	}
