@@ -12,6 +12,8 @@
 
 	if(isset($_GET['shorten'])){
         $short = $_GET['url'];
+        $expire = 2;
+        if(!empty($_GET['time']) && is_numeric($_GET['time'])) $expire = $_GET['time'];
         if(strpos($short, "http://") === false && strpos($short, "https://") === false){ $short = "http://$short"; }
 
 	    $apip = $redis->get("api:ip:$ip");
@@ -22,7 +24,7 @@
 	    	die("Too many requests too fast!");
 	    }
 
-        $reShort = shorten($redis, $short, 2, $seperator);
+        $reShort = shorten($redis, $short, $expire, $seperator);
         $reShort = explode($seperator, $reShort);
         $retCode = $reShort[0];
 
@@ -52,7 +54,7 @@
                 break;
         }
         exit;
-	}elseif(isset($_GET['resolve'])){ die("Not ready"); }
-	else{ die("Improper Call."); }
+	}elseif(isset($_GET['resolve'])){ die("Not ready"); 
+	}else{ die("Improper Call."); }
 
 ?>

@@ -45,7 +45,7 @@ function shortenTabURL(tabid){ // Use just a tab id to shorten its url
 
 function shortenURL(url){ // Creates a short url and copies it to clipboard
 	if(testURL(url)){
-		sendAPIRequest("shorten&url=" + url, function(req){
+		sendAPIRequest("?shorten&url=" + url, function(req){
 			var res = req.responseText.trim();
 			switch(res){
 				case "dead":
@@ -58,7 +58,7 @@ function shortenURL(url){ // Creates a short url and copies it to clipboard
 					showAlert("General Error.");
 					break;
 				default:
-					copyToClipboard("http://lob.li/" + res);
+					copyToClipboard("http://b.lob.li/?"+res);
 					showAlert("Link shortened. Short link copied to clipboard!");
 					break;
 			}
@@ -68,7 +68,7 @@ function shortenURL(url){ // Creates a short url and copies it to clipboard
 
 function resolveURL(url){ // For when/if I decide to add the ability to resolve links through the extension
 	if(testURL(url)){
-		sendAPIRequest("resolve&url=" + url, function(req){
+		sendAPIRequest("?resolve&url=" + url, function(req){
 			var res = req.responseText.trim();
 			copyToClipboard(res);
 			showAlert("Link Resolved!\n" + res);
@@ -79,7 +79,7 @@ function resolveURL(url){ // For when/if I decide to add the ability to resolve 
 function sendAPIRequest(url, callback){ // Sends a GET request to the server, response is expected to be text and only short id, or resolved link
 	var method = "GET";
 	var req = new XMLHttpRequest();
-	req.open(method, "http://lob.li/ch/" + url, true);
+	req.open(method, "http://b.lob.li/ch/" + url, true);
 	req.onload = function(){
 		callback(req);
 	};
