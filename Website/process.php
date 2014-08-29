@@ -50,8 +50,14 @@
 	require('Include/PHP/functions.php');
 
     if(isset($_GET['resolve']) && !empty($_POST['link'])){
-        if(empty($_GET['token']) || $_GET['token'] != $_SESSION['token'] || empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
+        if(empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
             die("<div id=\"danger\" class=\"alert alert-danger\">Oh Noes! Something happened and I can't continue.<br />Please try again by using the form located at <a href=\"http://lob.li\">lob.li</a>.</div>");
+        }
+
+        if(!$redis->exists("tokens:".$_SESSION['token']) || $redis->get("tokens:".$_SESSION['token']) == 1){
+           echo "<script>alert('Invalid or expired token. Please try again');</script>";
+           include("Include/PHP/token.php");
+           header("location:index.php");
         }
 
         $link = $_POST['link'];
@@ -76,9 +82,17 @@
     }
 
 	if(!empty($_POST['link']) || !empty($_POST['linkage'])){
-        if(empty($_GET['token']) || $_GET['token'] != $_SESSION['token'] || empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
+        if(empty($_POST[$catchid]) || $_POST[$catchid] != $catchVal){ 
             die("<div id=\"danger\" class=\"alert alert-danger\">Oh Noes! Something happened and I can't continue.<br />Please try again by using the form located at <a href=\"http://lob.li\">lob.li</a>.</div>");
         } 
+
+        if(!$redis->exists("tokens:".$_SESSION['token']) || $redis->get("tokens:".$_SESSION['token']) == 1){
+           echo "<script>alert('Invalid or expired token. Please try again');</script>";
+           include("Include/PHP/token.php");
+           header("location:index.php");
+        }
+
+        $redis->set("tokens:".$_SESSION['token'], 1);
 
     	//$short = sanitize($_POST['link'], $seperator);
         $short = $_POST['link'];
