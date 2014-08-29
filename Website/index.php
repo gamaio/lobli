@@ -16,18 +16,12 @@
         ip:
           link id - list holding all visiting IPs for that link
   */
-
-  // Generate a token on the fly. This should prevent POST spam attacks directly into process.php
-  $token = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
-  $token = base_convert($token, 10, 36); 
-  $_SESSION['token'] = $token;
+  require('Include/PHP/token.php');
 
   $catchid = substr(number_format(time() * mt_rand(),0,'',''),0,10);
   $catchVal = hash('sha256', $catchid.mt_rand().time().substr(number_format(time() * mt_rand(),0,'',''),0,10));
   $catchVal = base_convert($catchVal.$catchid, 10, 36);
   $_SESSION['catch'] = $catchid.":".$catchVal;
-
-  require('Include/PHP/db.php');
 
   function followLink($redis, $link){
     if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) { // Get true IP of visiter if going through cloudflare
@@ -175,7 +169,7 @@
         $("#theLoader").fadeIn("fast");
         event.preventDefault();
         event.stopPropagation();
-        $.post("process.php?token=<?php echo $token; ?>", $(this).serialize(), function(data){
+        $.post("process.php", $(this).serialize(), function(data){
           $("#message").hide().html(data).slideDown("fast");
           $("#theLoader").hide();
           if($('#danger').length){
