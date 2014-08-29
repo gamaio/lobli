@@ -51,7 +51,7 @@
 
 		    $redis->zAdd("tracking:clicks", 1, $link);
 
-		    return "0$seperator$short$";
+		    return "0$seperator$short";
  	    }
 	}
 
