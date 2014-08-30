@@ -144,7 +144,8 @@
 
     <div id="footer" style="position:absolute;width:100%;bottom:1px;">
       <div class="container">
-        <p class="text-muted">Copyright &copy; 2014 Unified Programming Solutions - Version: 0.0.1</p>
+		<div style="padding-left:100%;"><a href="http://lob.li/1mq4" target="lobli.chrome"><img src="ChromeWebStore_BadgeWBorder_v2_206x58.png" alt="chrome web store" /></a></div>
+        <p class="text-muted">Copyright &copy; 2014 Unified Programming Solutions - Version: 0.0.1 </p>
       </div>
     </div>
 
