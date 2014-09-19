@@ -17,7 +17,8 @@
 		"tabs",
 		"clipboardWrite",
 		"contextMenus",
-		"notifications"
+		"notifications",
+		"storage"
 	],
 	"icons": {
 		"16": "icons/lobli-16.png",
@@ -30,7 +31,12 @@
 		"icons/lobli-19.png",
 		"icons/lobli-32.png",
 		"icons/lobli-48.png",
-		"icons/lobli-128.png"
+		"icons/lobli-128.png",
+		"icons/lobli-16-disabled.png",
+		"icons/lobli-19-disabled.png",
+		"icons/lobli-32-disabled.png",
+		"icons/lobli-48-disabled.png",
+		"icons/lobli-128-disabled.png"
 	],
 	"commands": {
 		"shortenTab": {
