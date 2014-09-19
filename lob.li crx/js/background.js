@@ -8,10 +8,30 @@ chrome.commands.onCommand.addListener(function(command){ // Keyboard shortcut tr
 });
 
 chrome.browserAction.onClicked.addListener(function(tab){ // Shorten current tab when lobli icon pressed
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-		var current = tabs[0]
-		shortenTabURL(current.id);
-	});
+	var disabled = getData("lobli-disabled");
+	if(disabled == true){
+		showAlert("For some reason or another, your extension has been disabled.\nFor more info, please email c0de@unps,us");
+	}else{
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+			var current = tabs[0]
+			shortenTabURL(current.id);
+		});
+	}
+});
+
+chrome.runtime.onInstalled.addLIstener(function(data){ // Get a new API key from the get go
+	if(data.reason == "install"){
+		getNewAPIKey();
+	}else if(data.reason == "update"){
+		testAPIKey();
+	}
+});
+
+chrome.runtime.onStartup.addListener(function(){ // Check to see if extension is disabled on startup
+	var data = getData("lobliAPIKey");
+	if(data != undefined && data == true){
+		testAPIKey();
+	}
 });
 
 function showAlert(text){
@@ -45,7 +65,8 @@ function shortenTabURL(tabid){ // Use just a tab id to shorten its url
 
 function shortenURL(url){ // Creates a short url and copies it to clipboard
 	if(testURL(url)){
-		sendAPIRequest("?shorten&url=" + url, function(req){
+		var key = getData("lobliAPIKey");
+		sendAPIRequest("?shorten&url=" + url + "&key=" + key, function(req){
 			var res = req.responseText.trim();
 			switch(res){
 				case "dead":
@@ -68,12 +89,47 @@ function shortenURL(url){ // Creates a short url and copies it to clipboard
 
 function resolveURL(url){ // For when/if I decide to add the ability to resolve links through the extension
 	if(testURL(url)){
-		sendAPIRequest("?resolve&url=" + url, function(req){
+		var key = getData("lobliAPIKey");
+		sendAPIRequest("?resolve&url=" + url + "&key=" + key, function(req){
 			var res = req.responseText.trim();
 			copyToClipboard(res);
 			showAlert("Link Resolved!\n" + res);
 		});
 	}
+}
+
+function testAPIKey(){ // Compares local key to server
+	var key = getData("lobliAPIKey");
+	if(key != undefined){
+		sendAPIRequest("?testKey&key=" + key, function(req){
+			var res = req.responseText.trim();
+			if(key == "Invalid API Key"){ // Misformatted or other, try to get a new one
+				getNewAPIKey();
+			}
+		});
+	}else{
+		getNewAPIKey();
+	}
+}
+
+function getNewAPIKey(){ // Tries to get a new API key from the server
+	var manifest = chrome.runtime.getManifest();
+	sendAPIRequest("?newAPIKey&c=loblichrome&v=" + manifest.version, function(req){
+		var res = req.responseText.trim();
+		if(res == "Blacklisted client"){ // This client was blacklisted for some reason. Lets disable parts of the extension
+			chrome.browserAction.setIcon({ path: "../icons/lobli-19-disabled.png" });
+			chrome.storage.sync.set({ "lobli-disabled": true });
+			showAlert("D: Your client has been blacklisted!\nIf this was a mistake, please email c0de@unps.us");
+		}else{
+			chrome.storage.sync.set({ "lobliAPIKey": res, "lobli-disabled": false });
+		}
+	});
+}
+
+function getData(key){
+	chrome.storage.sync.get(key, function(data){
+		return data;
+	});
 }
 
 function sendAPIRequest(url, callback){ // Sends a GET request to the server, response is expected to be text and only short id, or resolved link
