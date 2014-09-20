@@ -1,16 +1,21 @@
 chrome.commands.onCommand.addListener(function(command){ // Keyboard shortcut trigger - Shorten current tab
 	if(command == "shortenTab"){
-		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-			var current = tabs[0]
-			shortenTabURL(current.id);
-		});
+		var disabled = getData("lobli-disabled");
+		if(disabled == true){
+			testAPIKey();
+		}else{
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+				var current = tabs[0]
+				shortenTabURL(current.id);
+			});
+		}
 	}
 });
 
 chrome.browserAction.onClicked.addListener(function(tab){ // Shorten current tab when lobli icon pressed
 	var disabled = getData("lobli-disabled");
 	if(disabled == true){
-		showAlert("For some reason or another, your extension has been disabled.\nFor more info, please email c0de@unps,us");
+		testAPIKey();
 	}else{
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 			var current = tabs[0]
@@ -98,13 +103,31 @@ function resolveURL(url){ // For when/if I decide to add the ability to resolve 
 	}
 }
 
+function linkStats(url){ // Get stats to that specific link (context menu?)
+	if(testURL(url)){
+		var key = getData("lobliAPIKey");
+		sendAPIRequest("?stats&url=" + url + "&key=" + key, function(req){
+			var res = req.responseText.trim();
+			// format this info and make a popup window
+		});
+	}
+}
+
 function testAPIKey(){ // Compares local key to server
 	var key = getData("lobliAPIKey");
 	if(key != undefined){
 		sendAPIRequest("?testKey&key=" + key, function(req){
 			var res = req.responseText.trim();
-			if(key == "Invalid API Key"){ // Misformatted or other, try to get a new one
+			var disabled = getData("lobli-disabled");
+			if(res == "Invalid API Key"){ // Misformatted or other, try to get a new one
 				getNewAPIKey();
+			}else if(res == "Blacklisted client"){
+				if(disabled != true){
+					chrome.storage.sync.set({ "lobli-disabled": true });
+				}
+				showAlert("For some reason or another, your extension has been disabled.\nFor more info, please email c0de@unps,us");
+			}else if(res = "OKAY"){
+				chrome.storage.sync.set({ "lobli-disabled": false });
 			}
 		});
 	}else{
