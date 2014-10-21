@@ -1,22 +1,5 @@
 chrome.commands.onCommand.addListener(function(command){ // Keyboard shortcut trigger - Shorten current tab
 	if(command == "shortenTab"){
-		var disabled = getData("lobli-disabled");
-		if(disabled == true){
-			testAPIKey();
-		}else{
-			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-				var current = tabs[0]
-				shortenTabURL(current.id);
-			});
-		}
-	}
-});
-
-chrome.browserAction.onClicked.addListener(function(tab){ // Shorten current tab when lobli icon pressed
-	var disabled = getData("lobli-disabled");
-	if(disabled == true){
-		testAPIKey();
-	}else{
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 			var current = tabs[0]
 			shortenTabURL(current.id);
@@ -24,6 +7,14 @@ chrome.browserAction.onClicked.addListener(function(tab){ // Shorten current tab
 	}
 });
 
+chrome.browserAction.onClicked.addListener(function(tab){ // Shorten current tab when lobli icon pressed
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+		var current = tabs[0]
+		shortenTabURL(current.id);
+	});
+});
+
+/* // Incomplete functions
 chrome.runtime.onInstalled.addLIstener(function(data){ // Get a new API key from the get go
 	if(data.reason == "install"){
 		getNewAPIKey();
@@ -38,9 +29,10 @@ chrome.runtime.onStartup.addListener(function(){ // Check to see if extension is
 		testAPIKey();
 	}
 });
+*/
 
 function showAlert(text){
-	var opt ={
+	var opt = {
 		type: "basic",
 		title: "lob.li Chrome",
 		message: text,
@@ -70,8 +62,8 @@ function shortenTabURL(tabid){ // Use just a tab id to shorten its url
 
 function shortenURL(url){ // Creates a short url and copies it to clipboard
 	if(testURL(url)){
-		var key = getData("lobliAPIKey");
-		sendAPIRequest("?shorten&url=" + url + "&key=" + key, function(req){
+		var url = encodeURIComponent(url);
+		sendAPIRequest("?shorten&url=" + url, function(req){
 			var res = req.responseText.trim();
 			switch(res){
 				case "dead":
@@ -84,7 +76,7 @@ function shortenURL(url){ // Creates a short url and copies it to clipboard
 					showAlert("General Error.");
 					break;
 				default:
-					copyToClipboard("http://b.lob.li/?"+res);
+					copyToClipboard("http://lob.li/"+res);
 					showAlert("Link shortened. Short link copied to clipboard!");
 					break;
 			}
@@ -94,8 +86,7 @@ function shortenURL(url){ // Creates a short url and copies it to clipboard
 
 function resolveURL(url){ // For when/if I decide to add the ability to resolve links through the extension
 	if(testURL(url)){
-		var key = getData("lobliAPIKey");
-		sendAPIRequest("?resolve&url=" + url + "&key=" + key, function(req){
+		sendAPIRequest("?resolve&url=" + url, function(req){
 			var res = req.responseText.trim();
 			copyToClipboard(res);
 			showAlert("Link Resolved!\n" + res);
@@ -105,14 +96,14 @@ function resolveURL(url){ // For when/if I decide to add the ability to resolve 
 
 function linkStats(url){ // Get stats to that specific link (context menu?)
 	if(testURL(url)){
-		var key = getData("lobliAPIKey");
-		sendAPIRequest("?stats&url=" + url + "&key=" + key, function(req){
+		sendAPIRequest("?stats&url=" + url, function(req){
 			var res = req.responseText.trim();
 			// format this info and make a popup window
 		});
 	}
 }
 
+/* // These functions are also incomplete
 function testAPIKey(){ // Compares local key to server
 	var key = getData("lobliAPIKey");
 	if(key != undefined){
@@ -154,11 +145,12 @@ function getData(key){
 		return data;
 	});
 }
+*/
 
 function sendAPIRequest(url, callback){ // Sends a GET request to the server, response is expected to be text and only short id, or resolved link
 	var method = "GET";
 	var req = new XMLHttpRequest();
-	req.open(method, "http://b.lob.li/ch/" + url, true);
+	req.open(method, "http://api.lob.li/" + url, true);
 	req.onload = function(){
 		callback(req);
 	};
