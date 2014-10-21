@@ -12,6 +12,8 @@
 		}
 	} while(1);
 
-	$redis->set("tokens:$token", 0); // Store the token forever, when set to 1, don't allow token to be used anymore.
+	$now = time(null);
+	$redis->set("tokens:$token", 0); // Store the token, when set to 1, don't allow token to be used anymore.
+	$redis->expire("tokens:$token", $now+60) // Expire the token after 1 minute on the server
 	$_SESSION['token'] = $token;
 ?>
