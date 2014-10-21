@@ -173,13 +173,6 @@
         $.post("process.php", $(this).serialize(), function(data){
           $("#message").hide().html(data).slideDown("fast");
           $("#theLoader").hide();
-          if($('#danger').length){
-            $('#short-button').removeClass("btn-primary btn-success btn-warning").addClass("btn-danger");
-          }else if($('#success').length){
-            $('#short-button').removeClass("btn-primary btn-danger btn-warning").addClass("btn-success");
-          }else if($('#warning').length){
-            $('#short-button').removeClass("btn-primary btn-success btn-danger").addClass("btn-warning");
-          }
         });
       });
     </script>
